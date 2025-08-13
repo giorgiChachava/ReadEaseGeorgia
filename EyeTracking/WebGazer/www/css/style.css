@@ -1,0 +1,237 @@
+body {
+    min-width:600px!important;
+}
+
+button {
+    border-radius: 4px;
+}
+/* Video Feed Styling */
+#overlay {
+/* Video Feed Styling:
+ * Include the !important keyword to override default styles applied by JS.
+ * webgazer.js sets defaults for: display, position, top, left, width, height
+ */
+}
+#webgazerVideoContainer {
+    display: block !important; 
+    position: fixed !important;
+    top: 0px !important;
+    left: 0px !important;
+    width: 320px !important;
+    height: 240px !important;
+    z-index: 1;
+}
+
+#backToMenu{
+    background: #2a6bb7;
+     color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(74, 144, 226, 0.3);
+  transition: background 0.3s ease;
+}
+
+/* Navbar styling */
+#webgazerNavbar {
+    left: 320px;
+    width: calc(100% - 320px);
+    z-index: 0;
+    box-shadow: 0px 3px 5px #ddd;
+    border:0px;
+    background-color: #fff;
+}
+
+#Accuracy a{
+    background-color: #222;
+    color: #eee;
+    left: -15px;
+    padding-left: 80px;
+    padding-right: 40px;
+}
+#Accuracy {
+    background-color: #222;
+    padding-left: inherit;
+}
+
+li {
+    padding-left: 50px;
+}
+.navbar-right li {
+    padding-right: 20px;
+}
+
+.helpBtn {
+    display: inline-block;
+    padding: 15px;
+    border: none;
+    background: none;
+    color: #777;
+}
+.helpBtn:hover {
+    color: black!important;
+    text-decoration: none;
+}
+.modal-header {
+    border-bottom: none!important;
+}
+
+/* Calibration button styling */
+.Calibration{
+    width: 20px;
+    height: 20px;
+    -webkit-border-radius: 25px;
+    -moz-border-radius: 25px;
+    border-radius: 25px;
+    background-color: red;
+    opacity: 0.2;
+    border-color: black;
+    border-style: solid;
+    position:fixed;
+}
+
+/* Calibration point position */
+#Pt1{
+    top: 70px;
+    left:340px;
+}
+#Pt2{
+    top: 70px;
+    left:50vw;
+    margin-left: 340;
+}
+#Pt3{
+    top: 70px;
+    right:2vw;
+}
+#Pt4{
+    top:50vh;
+    left:2vw;
+}
+#Pt5{
+    top: 50vh;
+    left: 50vw;
+}
+#Pt6{
+    top: 50vh;
+    right:2vw;
+}
+#Pt7{
+    bottom:2vw;
+    left: 2vw;
+}
+#Pt8{
+    bottom:2vw;
+    left:50vw;
+}
+#Pt9{
+    bottom:2vw;
+    right:2vw;
+}
+
+.modal-backdrop {
+    background-color: transparent !important;
+    opacity: 0 !important;
+  }
+
+        @import url('https://fonts.googleapis.com/css2?family=Open+Sans&family=Roboto+Slab&family=Comic+Neue:wght@400;700&display=swap');
+        
+        .font-handwriting {
+            font-family: 'Comic Neue', cursive;
+        }
+        
+        .game-card:hover {
+            transform: translateY(-5px);
+            transition: transform 0.2s;
+        }
+
+        .theme-light {
+            --bg: #f0f9ff;
+            --card-bg: #ffffff;
+            --text: #1a202c;
+            --accent: #93c5fd;
+            --accent-text: #1e40af;
+            --border: #bfdbfe;
+        }
+
+        .theme-dark {
+            --bg: #1e293b;
+            --card-bg: #334155;
+            --text: #f1f5f9;
+            --accent: #60a5fa;
+            --accent-text: #f1f5f9;
+            --border: #334155;
+        }
+
+        .theme-high-contrast {
+            --bg: #fef9c3;
+            --card-bg: #ffffff;
+            --text: #000000;
+            --accent: #fcd34d;
+            --accent-text: #000000;
+            --border: #000000;
+        }
+
+        .theme-dyslexia {
+            --bg: #ffe4e1;
+            --card-bg: #ffffff;
+            --text: #1a202c;
+            --accent: #fda4af;
+            --accent-text: #1a202c;
+            --border: #fda4af;
+        }
+
+        .theme-rainbow {
+            --bg: linear-gradient(to right, #fee2e2, #fef9c3, #d1fae5);
+            --card-bg: #ffffff;
+            --text: #1a202c;
+            --accent: linear-gradient(to right, #f87171, #fbbf24, #34d399);
+            --accent-text: #1a202c;
+            --border: #93c5fd;
+        }
+
+        .theme-space {
+            --bg: linear-gradient(to bottom, #1e3a8a, #312e8e);
+            --card-bg: #312e8e;
+            --text: #f8fafc;
+            --accent: #3b82f6;
+            --accent-text: #f8fafc;
+            --border: #3b82f6;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: sans-serif;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-color: var(--border);
+        }
+
+        .accent-bg {
+            background-color: var(--accent);
+            color: var(--accent-text);
+        }
+
+        .btn-hover:hover {
+            transform: scale(1.02);
+            transition: all 0.2s;
+        }
+
+        .active {
+            background-color: var(--accent);
+            color: var(--accent-text) !important;
+        }
+
+        .preview-text {
+            transition: all 0.3s ease;
+        }
+
+        .theme-button.active {
+            background: var(--accent);
+            color: var(--accent-text);
+        }

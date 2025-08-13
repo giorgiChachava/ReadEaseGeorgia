@@ -1,0 +1,2860 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Readease</title>
+  <link rel="stylesheet" href="../EyeTracking/WebGazer/www/css/style.css">
+  <link rel="stylesheet" href="../EyeTracking/WebGazer/www/css/bootstrap.min.css">
+  <!-- Add this FIRST -->
+<!-- Then load WebGazer -->
+  <script src="../EyeTracking/WebGazer/www/webgazer.js"></script>
+  <!-- Replace the webgazer.js script tag with this -->
+<script src="https://cdn.jsdelivr.net/npm/webgazer@2.2.1/dist/webgazer.min.js"></script>
+<script src="exerercises.js"></script>
+</head>
+<body>
+
+<!-- Intro THINGIES----------------->
+<div id="introSection" style="padding: 50px 20px; text-align: center; background-color: #f7f9fc; border-bottom: 2px solid #e0e6ed; font-family: 'Arial', sans-serif; line-height: 1.6;">
+  <div style="max-width: 800px; margin: 0 auto;">
+    <h1 style="font-size: 42px; font-weight: 800; color: #2c3e50; margin-bottom: 15px; line-height: 1.2;">
+      უკეთ წაიკითხე, იყავი ცონტენტრირებული
+    </h1>
+    <p style="font-size: 20px; color: #4a6fa5; font-weight: 500; margin-bottom: 30px;">
+      დახმარება დისლექსიისა და ყურადღების პრობლემებისთვის
+    </p>
+
+    <img src="https://placehold.co/400x250/2c3e50/f7f9fc?text=ReadEase+Demo" alt="Person using ReadEase with AI assistance" style="max-width: 100%; height: auto; border-radius: 12px; margin: 20px 0; box-shadow: 0 8px 16px rgba(0,0,0,0.1);">
+
+    <div style="display: flex; justify-content: center; gap: 25px; flex-wrap: wrap; margin: 40px 0;">
+      <div style="text-align: center; max-width: 180px;">
+        <div style="background: #e8f4fc; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; font-size: 28px;">👁️</div>
+        <p style="font-weight: 700; margin-bottom: 5px; color: #2c3e50;">ხელოვნური ინტელექტი</p>
+        <p style="color: #555; font-size: 15px;">ფოკუსის ანალიზი</p>
+      </div>
+      <div style="text-align: center; max-width: 180px;">
+        <div style="background: #e8f4fc; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; font-size: 28px;">🎮</div>
+        <p style="font-weight: 700; margin-bottom: 5px; color: #2c3e50;">სავარჯიშოები</p>
+        <p style="color: #555; font-size: 15px;">მონიშნული შენთვის</p>
+      </div>
+      <div style="text-align: center; max-width: 180px;">
+        <div style="background: #e8f4fc; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; font-size: 28px;">🔠</div>
+        <p style="font-weight: 700; margin-bottom: 5px; color: #2c3e50;">დისლექსიაზე მორგებული</p>
+        <p style="color: #555; font-size: 15px;">შრიფტები და ფერები</p>
+      </div>
+    </div>
+
+    <p style="font-size: 18px; color: #444; margin: 30px 0 15px;">დაიწყე სწრაფად:</p>
+    <div style="margin: 25px 0;">
+      <button id="startCalibrationBox" style="background: #28a745; color: white; border: none; padding: 14px 30px; font-size: 18px; border-radius: 8px; cursor: pointer; font-weight: 600; margin: 10px; box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3); transition: all 0.3s;" onmouseover="this.style.transform='translateY(-2px)';" onmouseout="this.style.transform='none';">
+        👁️ დაიწყე თვალის მონიტორინგით
+      </button>
+      <button id="skipCalibration" onclick="skipCalibration()" style="background: white; color: #4a6fa5; border: 2px solid #4a6fa5; padding: 14px 30px; font-size: 18px; border-radius: 8px; cursor: pointer; font-weight: 600; margin: 10px; transition: all 0.3s;" onmouseover="this.style.background='#f0f7ff';" onmouseout="this.style.background='white';">
+        🖱️ სცადე კამერის გარეშე
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<!-- CALIBRATION THINGIES------------------------------------->
+<div id="calibrationThingies">
+  <!-- 🔵 Canvas -->
+  <canvas id="plotting_canvas" width="500" height="500" style="cursor:crosshair; display: none;"></canvas>
+
+  <!-- 🔵 Navbar -->
+  <nav id="webgazerNavbar" class="navbar navbar-expand-lg navbar-default navbar-fixed-top" style="display: none;">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#myNavbar">
+          <span class="navbar-toggler-icon">მენიუ</span>
+        </button>
+      </div>
+      <div class="collapse navbar-collapse" id="myNavbar">
+        <ul class="nav navbar-nav">
+          <li id="Accuracy"><a>კალიბრაცია არ ჩატარებულა</a></li>
+          <li><a onclick="Restart()" href="#">გადაკეთება</a></li>
+          <li><a onclick="webgazer.applyKalmanFilter(!webgazer.params.applyKalmanFilter)" href="#">კალმანის ფილტრის ჩართვა/გამორთვა</a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <li><a class="helpBtn" onclick="helpModalShow()" href="#"><span class="glyphicon glyphicon-cog"></span> დახმარება</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 🔵 Calibration Buttons -->
+  <div class="calibrationDiv" style="display: none;">
+    <input type="button" class="Calibration" id="Pt1" />
+    <input type="button" class="Calibration" id="Pt2" />
+    <input type="button" class="Calibration" id="Pt3" />
+    <input type="button" class="Calibration" id="Pt4" />
+    <input type="button" class="Calibration" id="Pt5" />
+    <input type="button" class="Calibration" id="Pt6" />
+    <input type="button" class="Calibration" id="Pt7" />
+    <input type="button" class="Calibration" id="Pt8" />
+    <input type="button" class="Calibration" id="Pt9" />
+  </div>
+
+  <!-- ✅ Continue Modal After Calibration -->
+  <div id="doneCalibrationModal" style="display: none; position: absolute; top: 30%; left: 50%; transform: translate(-50%, -50%);
+  background-color: white; padding: 20px; border: 2px solid #444; border-radius: 10px; z-index: 9999;">
+    <h4>კალიბრაცია დასრულებულია!</h4>
+    <p>კმაყოფილი ხართ სიზუსტით?</p>
+    <button class="btn btn-success" onclick="proceedToTracking()">კი, გააგრძელე</button>
+    <button class="btn btn-danger" onclick="Restart(); document.getElementById('doneCalibrationModal').style.display = 'none';">არა, გადაკეთება</button>
+  </div>
+
+  <!-- 🔵 Help Modal -->
+  <div id="helpModal" class="modal fade" arial-modal="true" style="display: none;" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body">
+          <img src="../EyeTracking/WebGazer/www/media/example/calibration.png" width="100%" height="100%" />
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="start_calibration" class="btn btn-primary" data-bs-dismiss="modal" onclick="RestartForCalibrationButton()">კალიბრაცია</button>
+          <button id="backToMenu" onclick="location.href='mainQar.html'">მთავარ გვერდზე დაბრუნება</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ Tracking Phase -->
+  <div id="trackingPhase" style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  background-color: #e0ffe0; padding: 30px; border-radius: 10px; text-align: center;">
+    <h2>თვალის მონიტორინგი დაწყებულია</h2>
+    <p>ახლა თქვენ აკვირდებიან. მიხედეთ ამას!</p>
+  </div>
+
+  <!-- ✅ Big Tracking Boxes (commented out, no text to translate) -->
+</div>
+
+
+<!-- EYE TRACKING EXERCISE PROMPT --------------------------------->
+<div id="eyeTrackingPrompt" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:1000; backdrop-filter:blur(4px);">
+  <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+              width:90%; max-width:400px; background:white; border-radius:16px; overflow:hidden;
+              box-shadow:0 10px 30px rgba(0,0,0,0.15);">
+    
+    <!-- Header -->
+    <div style="background:linear-gradient(135deg, #6f42c1, #8e44ad); padding:20px; text-align:center;">
+      <div style="width:60px; height:60px; background:white; border-radius:50%; margin:0 auto 15px;
+                  display:flex; align-items:center; justify-content:center;">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 18C15.3137 18 18 15.3137 18 12C18 8.68629 15.3137 6 12 6C8.68629 6 6 8.68629 6 12C6 15.3137 8.68629 18 12 18Z" fill="#6f42c1"/>
+          <path d="M12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16Z" fill="white"/>
+          <path d="M12 14C13.1046 14 14 13.1046 14 12C14 10.8954 13.1046 10 12 10C10.8954 10 10 10.8954 10 12C10 13.1046 10.8954 14 12 14Z" fill="#6f42c1"/>
+        </svg>
+      </div>
+      <h3 style="margin:0; color:white; font-size:20px; font-weight:600;">თვალის მონიტორინგი საჭიროა</h3>
+    </div>
+    
+    <!-- Content -->
+    <div style="padding:25px; text-align:center;">
+      <p style="margin:0 0 25px 0; color:#555; line-height:1.5; font-size:14px;">
+        საუკეთესო შედეგებისთვის, საჭიროა თვალის მოძრაობის კალიბრაცია.<br>
+        ეს პროცესი დაახლოებით 15 წამს გრძელდება და სავარჯიშოს შენზე მორგებაში ეხმარება.
+      </p>
+      
+      <div style="display:flex; justify-content:center; gap:12px; margin-top:20px;">
+        <button onclick="startCalibrationExercise()" 
+                style="background:#6f42c1; color:white; border:none; padding:12px 24px; 
+                       border-radius:8px; font-size:14px; font-weight:500; cursor:pointer;
+                       transition:all 0.2s; box-shadow:0 2px 8px rgba(111,66,193,0.3);"
+                onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(111,66,193,0.4)'" 
+                onmouseout="this.style.transform='none'; this.style.boxShadow='0 2px 8px rgba(111,66,193,0.3)'">
+          კალიბრაციის დაწყება
+        </button>
+        <button onclick="cancelCalibrationExercise()" 
+                style="background:none; color:#6f42c1; border:1px solid #e2e8f0; padding:12px 24px; 
+                       border-radius:8px; font-size:16px; font-weight:500; cursor:pointer;
+                       transition:all 0.2s;"
+                onmouseover="this.style.background='#f8f5ff'" 
+                onmouseout="this.style.background='none'">
+          არა
+        </button>
+      </div>
+    </div>
+    
+    <!-- Footer -->
+    <div style="padding:15px; background:#f8f5ff; text-align:center;">
+      <p style="margin:0; color:#6f42c1; font-size:13px; display:flex; align-items:center; justify-content:center; gap:6px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="#6f42c1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M12 8V12" stroke="#6f42c1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M12 16H12.01" stroke="#6f42c1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        ჩვენ არ ვინახავთ თვალის მოძრაობის მონაცემებს
+      </p>
+    </div>
+  </div>
+</div>
+
+
+<!-- MAIN THINGIIES------------------------------>
+<div id="main" style = "display: none;">
+    <header id="mainHeader" style="background-color: #2c3e50; color: white; padding: 0px 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000; font-family: 'Arial', sans-serif;">
+  <div style="display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; height: 8vh;">
+    
+    <!-- Logo and Site Name -->
+    <div style="display: flex; align-items: center; gap: 15px;">
+      <div style="background-color: #4a6fa5; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+        <span style="font-size: 20px;">📖</span>
+      </div>
+      <h1 style="margin: 0; font-size: 22px; font-weight: 700;">
+        <a href="/" style="color: white; text-decoration: none;">ReadEase</a>
+      </h1>
+    </div>
+
+    <!-- Main Navigation -->
+    <nav aria-label="Primary navigation">
+      <ul style="display: flex; list-style: none; margin: 0; padding: 0; gap: 25px;">
+        <li>
+          <a onclick="showSection('toolsSection'); hideExercises()" style="color: white; text-decoration: none; font-weight: 600; padding: 8px 12px; border-radius: 4px; transition: background-color 0.2s;" 
+             onmouseover="this.style.backgroundColor='#4a6fa5'" onmouseout="this.style.backgroundColor='transparent'">
+            ხელსაწყოები
+          </a>
+        </li>
+        <li>
+          <a onclick="showSection('exercisesSection'); hideExercises()" style="color: white; text-decoration: none; font-weight: 600; padding: 8px 12px; border-radius: 4px; transition: background-color 0.2s;"
+             onmouseover="this.style.backgroundColor='#4a6fa5'" onmouseout="this.style.backgroundColor='transparent'">
+            სავარჯიშოები
+          </a>
+        </li>
+        <li>
+          <a onclick="showSection('aboutSection'); hidehideExercises()" style="color: white; text-decoration: none; font-weight: 600; padding: 8px 12px; border-radius: 4px; transition: background-color 0.2s;"
+             onmouseover="this.style.backgroundColor='#4a6fa5'" onmouseout="this.style.backgroundColor='transparent'">
+            ჩვენ შესახებ
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- User Controls -->
+    <div style="display: flex; align-items: center; gap: 15px;">
+      <!-- Mode Status Indicator -->
+      <div id="trackingStatus" style="display: flex; align-items: center; gap: 8px; background-color: #28a745; padding: 6px 12px; border-radius: 20px; font-size: 14px;">
+        <span style="display: inline-block; width: 10px; height: 10px; background-color: white; border-radius: 50%;"></span>
+        <span id="modeText">მონიტორინგი აქტიურია</span>
+      </div>
+
+      <!-- Back to Main Menu Button -->
+      <button onclick="location.href='mainQar.html'" 
+              style="background: rgba(255,255,255,0.1); border: none; color: white; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-weight: 600; transition: all 0.2s;"
+              onmouseover="this.style.backgroundColor='rgba(255,255,255,0.2)'" onmouseout="this.style.backgroundColor='rgba(255,255,255,0.1)'">
+        ← მთავარი გვერდი
+      </button>
+
+    </div>
+  </div>
+</header>
+
+
+<div id="toolsSection" style="display: none; background: #f8f9fa; padding: 20px; border-radius: 8px; margin-top: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+  <div style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center;">
+    
+    <!-- Font Size Controls -->
+    <div style="flex: 1; min-width: 150px;">
+      <h3 style="margin-top: 0; color: #2c3e50; font-size: 16px;">ტექსტის ზომა</h3>
+      <div style="display: flex; gap: 8px;">
+        <button onclick="adjustFontSize(-1)" style="background: #4a6fa5; color: white; border: none; border-radius: 4px; padding: 5px 10px; cursor: pointer;">A-</button>
+        <button onclick="resetFontSize()" style="background: #6c757d; color: white; border: none; border-radius: 4px; padding: 5px 10px; cursor: pointer;">წაშლა</button>
+        <button onclick="adjustFontSize(1)" style="background: #4a6fa5; color: white; border: none; border-radius: 4px; padding: 5px 10px; cursor: pointer;">A+</button>
+      </div>
+    </div>
+    
+    <!-- Color Theme -->
+    <div style="flex: 1; min-width: 150px;">
+      <h3 style="margin-top: 0; color: #2c3e50; font-size: 16px;">Color Theme</h3>
+      <select onchange="changeColorTheme(this.value)" style="width: 100%; padding: 5px; border-radius: 4px; border: 1px solid #ddd;">
+        <option value="light">Light Mode</option>
+        <option value="dark">Dark Mode</option>
+        <option value="sepia">Sepia</option>
+        <option value="highContrast">High Contrast</option>
+        <option value="lightBeige">Light beige</option>
+        <option value="dyslexia-friendly">dyslexia-friendly</option>
+      </select>
+    </div>
+
+    
+    <!-- Dyslexia Tools -->
+    <div style="flex: 1; min-width: 150px;">
+      <h3 style="margin-top: 0; color: #2c3e50; font-size: 16px;">დისლექსია</h3>
+      <div style="display: flex; gap: 8px;">
+        <button id="dyslexiaFontBtn" onclick="rotateDyslexiaFont()" style="background: #6f42c1; color: white; border: none; border-radius: 4px; padding: 5px">🆎 ფონტი</button>
+        <button onclick="toggleLetterSpacing()" style="background: #6f42c1; color: white; border: none; border-radius: 4px; padding: 5px 10px; cursor: pointer;">↔ ინტერვალი</button>
+      </div>
+    </div>
+    
+  </div>
+  <script>
+// Tool Functions (minimal implementation)
+function adjustFontSize(change) {
+  const root = document.documentElement;
+  const currentSize = parseFloat(getComputedStyle(root).fontSize) || 16;
+  
+  // Set min/max boundaries (WCAG recommended range)
+  const minSize = 12;  // Absolute minimum
+  const maxSize = 22;  // Comfortable maximum
+  
+  // Calculate new size with constraints
+  const newSize = Math.max(minSize, Math.min(maxSize, currentSize + change));
+  
+  // Apply only if changed
+  if (newSize !== currentSize) {
+    root.style.fontSize = `${newSize}px`;
+    
+    // Optional: Visual feedback
+    const feedback = document.createElement('div');
+    feedback.textContent = `Text size: ${newSize}px`;
+    feedback.style.position = 'fixed';
+    feedback.style.bottom = '20px';
+    feedback.style.right = '20px';
+    feedback.style.background = '#4a6fa5';
+    feedback.style.color = 'white';
+    feedback.style.padding = '5px 10px';
+    feedback.style.borderRadius = '4px';
+    feedback.style.zIndex = '1000';
+    document.body.appendChild(feedback);
+    setTimeout(() => feedback.remove(), 1000);
+  }
+}
+function resetFontSize() {
+  document.documentElement.style.fontSize = '16px';
+}
+function changeColorTheme(theme) {
+  document.body.className = theme + '-theme';
+}
+
+const dyslexiaFonts = [
+  { name: "OpenDyslexic", font: "'OpenDyslexic', sans-serif" },
+  { name: "Lexend", font: "'Lexend', sans-serif" },
+  { name: "Comic Sans", font: "'Comic Sans MS', cursive" },
+  { name: "Atkinson", font: "'Atkinson Hyperlegible', sans-serif" },
+  { name: "Sylexiad", font: "'Sylexiad Sans', sans-serif" },
+  { name: "Verdana", font: "'Verdana', sans-serif" },            // very readable, popular
+  { name: "Tiresias", font: "'Tiresias Infofont', sans-serif" }, // designed for low vision
+  { name: "Andika", font: "'Andika', sans-serif" },              // clear & easy
+  { name: "Calibri", font: "'Calibri', sans-serif" },            // clean modern
+  { name: "Trebuchet MS", font: "'Trebuchet MS', sans-serif" }   // friendly & readable
+];
+  
+  let currentFontIndex = 0;
+
+  function rotateDyslexiaFont() {
+    currentFontIndex = (currentFontIndex + 1) % dyslexiaFonts.length;
+    const font = dyslexiaFonts[currentFontIndex];
+    
+    document.body.style.fontFamily = font.font;
+    document.getElementById("currentFontName").textContent = font.name;
+    
+    // Visual feedback
+    const btn = document.getElementById("dyslexiaFontBtn");
+    btn.style.transform = "scale(0.95)";
+    setTimeout(() => { btn.style.transform = "scale(1)"; }, 100);
+  }
+function toggleLetterSpacing() {
+  document.body.classList.toggle('wide-spacing');
+}
+</script>
+<style>
+.light-theme{background:#FEFEFE;color:#222;font-family:'Segoe UI',system-ui,sans-serif;-webkit-font-smoothing:antialiased;font-weight:450;line-height:1.7}
+.dark-theme{background:#1A1A1A;color:#F0F0F0;font-family:'SF Pro Text',system-ui,sans-serif;-webkit-font-smoothing:subpixel-antialiased;line-height:1.8}
+.sepia-theme{background:#F3EAD3;color:#4A3C29;font-family:Literata,Georgia,serif;line-height:1.9}
+.highContrast-theme{background:#000;color:#FFEE00;font-family:'Arial Black',Impact,sans-serif;font-weight:700;line-height:2;text-shadow:0 0 1px #000}
+.lightBeige-theme{background:#F8F4E8;color:#2D3748;font-family:Inter,system-ui,sans-serif;font-weight:500}
+.dyslexia-friendly-theme{background:#FFF;color:#222;font-family:OpenDyslexic,'Comic Sans',sans-serif;line-height:2;letter-spacing:0.05em}
+
+a,button {color:inherit; cursor:pointer; transition:color .3s;}
+a:hover,button:hover {color:#007BFF; text-decoration:underline;}
+body {line-height:1.6;}
+.container {padding:1rem 2rem;}
+
+.dyslexic-font { font-family: 'OpenDyslexic', Arial; }
+.wide-spacing { letter-spacing: 0.1em; }
+</style>
+</div>
+
+
+<div id="aboutSection" style="display: none; max-width: 900px; margin: 0 auto; padding: 30px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #333; line-height: 1.7;">
+  <!-- Header with gradient accent -->
+  <div style="text-align: center; margin-bottom: 40px;">
+    <h2 style="color: #2c3e50; font-size: 36px; font-weight: 600; margin-bottom: 15px; position: relative; display: inline-block;">
+      ReadEase-ის შესახებ
+      <span style="position: absolute; bottom: -10px; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, #4a6fa5, #6dd5ed); border-radius: 2px;"></span>
+    </h2>
+    <p style="color: #666; font-size: 18px; max-width: 700px; margin: 0 auto;">ინოვაციური ხელსაწყოები წაკითხვის გასამარტივებლათ</p>
+  </div>
+
+  <!-- Mission and Features Cards -->
+  <div style="display: flex; flex-wrap: wrap; gap: 30px; margin: 40px 0;">
+    <!-- Mission Card -->
+    <div style="flex: 1; min-width: 300px; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); transition: transform 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='none'">
+      <div style="background: linear-gradient(135deg, #4a6fa5, #6dd5ed); width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+        <span style="color: white; font-size: 24px;">✓</span>
+      </div>
+      <h3 style="color: #2c3e50; font-size: 22px; margin-top: 0; margin-bottom: 15px;">ჩვენი მისია</h3>
+      <p style="margin: 0; color: #555;">
+        ვქმნით <strong style="color: #4a6fa5;">უფასო წაკითხვის ხელსაწყოებს</strong> დისლექსიით, ADHD-თი და სხვა გამოწვევების მქონე ბავშვებისთვის.ეს ყველაფერი კი რეგისტრაციის გარეშე.
+      </p>
+    </div>
+
+    <!-- Features Card -->
+    <div style="flex: 1; min-width: 300px; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); transition: transform 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='none'">
+      <div style="background: linear-gradient(135deg, #6dd5ed, #a8e063); width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+        <span style="color: white; font-size: 24px;">✨</span>
+      </div>
+      <h3 style="color: #2c3e50; font-size: 22px; margin-top: 0; margin-bottom: 15px;">მთავარი ფუნქციები</h3>
+      <ul style="padding-left: 20px; margin: 0; color: #555;">
+        <li style="margin-bottom: 8px; position: relative; padding-left: 25px;">
+          <span style="position: absolute; left: 0; color: #6dd5ed;">•</span> 10+ დისლექსიისთვის ოპტიმიზებული ფონტი
+        </li>
+        <li style="margin-bottom: 8px; position: relative; padding-left: 25px;">
+          <span style="position: absolute; left: 0; color: #6dd5ed;">•</span> თვალის ტრეკინგი
+        </li>
+        <li style="margin-bottom: 8px; position: relative; padding-left: 25px;">
+          <span style="position: absolute; left: 0; color: #6dd5ed;">•</span> მრავალი სახალისო სავარჯიშო
+        </li>
+        <li style="position: relative; padding-left: 25px;">
+          <span style="position: absolute; left: 0; color: #6dd5ed;">•</span> ოპტიმიზირებული ფონები
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Values Section -->
+  <div style="background: linear-gradient(135deg, #f8f9fa, #eef2f5); padding: 40px; border-radius: 12px; margin-top: 30px; border: 1px solid rgba(0,0,0,0.05);">
+    <h3 style="color: #2c3e50; font-size: 26px; margin-top: 0; margin-bottom: 30px; text-align: center;">ჩვენი ღირებულებები</h3>
+    
+    <div style="display: flex; flex-wrap: wrap; gap: 30px; justify-content: center;">
+      <!-- Value 1 -->
+      <div style="flex: 1; min-width: 250px; max-width: 300px; background: white; padding: 25px; border-radius: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.03);">
+        <div style="background: #4a6fa5; color: white; width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 15px;">🔒</div>
+        <h4 style="color: #2c3e50; margin-bottom: 10px; font-size: 18px; font-weight: 600;">კონფიდენციალობა პირველ რიგში</h4>
+        <p style="margin: 0; color: #666; font-size: 15px; line-height: 1.6;">კამერის მონაცემები არ ინახება და არ გადადის სერვერზე.</p>
+      </div>
+      
+      <!-- Value 2 -->
+      <div style="flex: 1; min-width: 250px; max-width: 300px; background: white; padding: 25px; border-radius: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.03);">
+        <div style="background: #6dd5ed; color: white; width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 15px;">🔠</div>
+        <h4 style="color: #2c3e50; margin-bottom: 10px; font-size: 18px; font-weight: 600;">უნივერსალური დიზაინი</h4>
+        <p style="margin: 0; color: #666; font-size: 15px; line-height: 1.6;">მუშაობს როგორც კამერით, ასევე მის გარეშე.</p>
+      </div>
+      
+      <!-- Value 3 -->
+      <div style="flex: 1; min-width: 250px; max-width: 300px; background: white; padding: 25px; border-radius: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.03);">
+        <div style="background: #a8e063; color: white; width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 15px;">🆓</div>
+        <h4 style="color: #2c3e50; margin-bottom: 10px; font-size: 18px; font-weight: 600;">ყოველთვის უფასო</h4>
+        <p style="margin: 0; color: #666; font-size: 15px; line-height: 1.6;">არანაირი გადახდა ან გამოწერა, შესაძლებლობა ყველასთვის.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer Note -->
+  <div style="text-align: center; margin-top: 50px;">
+    <p style="display: inline-block; background: linear-gradient(90deg, #ff9a9e, #fad0c4); color: white; padding: 12px 30px; border-radius: 50px; font-size: 15px; font-weight: 600; margin: 0; box-shadow: 0 4px 15px rgba(250, 208, 196, 0.5);">
+      შექმნილია ♥ ყველასასთვის
+    </p>
+  </div>
+</div>
+
+
+<div id="exercisesSection" style="max-width: 800px; margin: 0 auto; padding: 20px;">
+
+  <!-- Header with Search -->
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; gap: 15px; flex-wrap: wrap;">
+    <h2 style="color: #2c3e50; margin: 0; font-size: 24px; font-weight: 600; display: flex; align-items: center; gap: 10px;">
+      <span style="background: #4a6fa5; width: 36px; height: 36px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; color: white;">📚</span>
+      კითხვის სავარჯიშოები
+    </h2>
+  </div>
+
+  <!-- Exercise Categories (Tabs) -->
+  <div style="display: flex; gap: 10px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 5px; padding-top:5px; padding-left: 2px">
+    <button onclick="filterExercises('all')" style="background: #4a6fa5; color: white; border: none; padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 500; white-space: nowrap;">ყველა</button>
+    <button onclick="filterExercises('level1')" style="background: #e2e8f0; color: #2c3e50; border: none; padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 500; white-space: nowrap;">მარტივი</button>
+    <button onclick="filterExercises('level2')" style="background: #e2e8f0; color: #2c3e50; border: none; padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 500; white-space: nowrap;">საშუალო</button>
+    <button onclick="filterExercises('level3')" style="background: #e2e8f0; color: #2c3e50; border: none; padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 500; white-space: nowrap;">რთული</button>
+  </div>
+
+  <!-- Exercise List -->
+  <div id="exercisesContainer"style="display: grid; gap: 16px;">
+
+    <!-- 1. Letter Mastery -->
+    <div class="exercise-card" data-level="level1"
+    onclick="startExercise('letter-mastery')" id="letter-mastery"
+         style="background: white; border-radius: 12px; padding: 0; cursor: pointer; 
+                box-shadow: 0 2px 6px rgba(0,0,0,0.05); transition: all 0.2s; border: 1px solid #f0f4f8;"
+         onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)'" 
+         onmouseout="this.style.transform='none'; this.style.boxShadow='0 2px 6px rgba(0,0,0,0.05)'">
+      <div style="background: linear-gradient(135deg, #6f42c1, #8e44ad); height: 6px; border-radius: 12px 12px 0 0;"></div>
+      <div style="padding: 16px; display: flex; gap: 16px;">
+        <div style="background: #f8f5ff; color: #6f42c1; width: 48px; height: 48px; border-radius: 10px; display: grid; place-items: center; font-size: 22px; flex-shrink: 0;">🔤</div>
+        <div style="flex: 1;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h3 style="margin: 0 0 6px 0; color: #2c3e50; font-size: 17px; font-weight: 600;">Letter Mastery</h3>
+            <span style="background: #f0fdf4; color: #166534; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 500;">მარტივი</span>
+          </div>
+          <p style="margin: 0; color: #666; font-size: 14px; line-height: 1.5;">გაავრჯიშე შენი ტვინი რთული ასოების, როგორიცაა შ/წ და მ/ნ, გარჩევისთვის.</p>
+          <div style="display: flex; gap: 8px; margin-top: 12px;">
+            <span style="background: #f3e8ff; color: #6f42c1; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 500;">ასოების ამოცნობა</span>
+            <span style="background: #e4d8fd; color: #685991; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 500;">ფონეტიკა</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Emoji Word Finder -->
+    <div  class="exercise-card" data-level="level3"
+    onclick="startExercise('emoji-word-finder')" id="emoji-word-finder"
+         style="background: white; border-radius: 12px; padding: 0; cursor: pointer; 
+                box-shadow: 0 2px 6px rgba(0,0,0,0.05); transition: all 0.2s; border: 1px solid #f0f4f8;"
+         onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)'" 
+         onmouseout="this.style.transform='none'; this.style.boxShadow='0 2px 6px rgba(0,0,0,0.05)'">
+      <div style="background: linear-gradient(135deg, #28a745, #2ecc71); height: 6px; border-radius: 12px 12px 0 0;"></div>
+      <div style="padding: 16px; display: flex; gap: 16px;">
+        <div style="background: #f0fdf4; color: #28a745; width: 48px; height: 48px; border-radius: 10px; display: grid; place-items: center; font-size: 22px; flex-shrink: 0;">🔠</div>
+        <div style="flex: 1;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h3 style="margin: 0 0 6px 0; color: #2c3e50; font-size: 17px; font-weight: 600;">Emoji word finder</h3>
+            <span style="background: #fee1c7; color: #92400e; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 500;">რთული</span>
+          </div>
+          <p style="margin: 0; color: #666; font-size: 14px; line-height: 1.5;">გაშიფრე ემოჯით მინიშებული სიტყვები, აარჩიე ისეთი ასოები რომლითაც მაგ სიტყვას ააწყობ.</p>
+          <div style="display: flex; gap: 8px; margin-top: 12px;">
+            <span style="background: #f3e8ff; color: #6f42c1; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 500;">სიტყვების ამოცნობა</span>
+            <span style="background: #f3e8ff; color: #4271c1; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 500;">სიტყვების ორთოგრაფია</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Gaze Maze -->
+    <div  class="exercise-card" data-level="level2"
+    onclick="startExercise('gaze-maze')" id="gaze-maze"
+         style="background: white; border-radius: 12px; padding: 0; cursor: pointer; 
+                box-shadow: 0 2px 6px rgba(0,0,0,0.05); transition: all 0.2s; border: 1px solid #f0f4f8;"
+         onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)'" 
+         onmouseout="this.style.transform='none'; this.style.boxShadow='0 2px 6px rgba(0,0,0,0.05)'">
+      <div style="background: linear-gradient(135deg, #3182ce, #4299e1); height: 6px; border-radius: 12px 12px 0 0;"></div>
+      <div style="padding: 16px; display: flex; gap: 16px;">
+        <div style="background: #eff6ff; color: #3182ce; width: 48px; height: 48px; border-radius: 10px; display: grid; place-items: center; font-size: 22px; flex-shrink: 0;">👁️</div>
+        <div style="flex: 1;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h3 style="margin: 0 0 6px 0; color: #2c3e50; font-size: 17px; font-weight: 600;">Gaze Maze</h3>
+            <span style="background: #fef3c7; color: #92400e; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 500;">Medium</span>
+          </div>
+          <p style="margin: 0; color: #666; font-size: 14px; line-height: 1.5;">გააყოლე თვალი ბურთს, რაც გააუმჯობესებს კონტროლს და შეამცირებს არასტაბილურ კითხვის მოძრაობებს.</p>
+          <div style="display: flex; gap: 8px; margin-top: 12px;">
+            <span style="background: #eff6ff; color: #1e40af; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 500;">ADHD</span>
+            <span style="background: #e9d8fd; color: #553c9a; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 500;">თვალის დატრეკვა</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. Find words 1 row -->
+    <div  class="exercise-card" data-level="level1"
+    onclick="startExercise('find-words')" id="find-words"
+         style="background: white; border-radius: 12px; padding: 0; cursor: pointer; 
+                box-shadow: 0 2px 6px rgba(0,0,0,0.05); transition: all 0.2s; border: 1px solid #f0f4f8;"
+         onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)'" 
+         onmouseout="this.style.transform='none'; this.style.boxShadow='0 2px 6px rgba(0,0,0,0.05)'">
+      <div style="background: linear-gradient(135deg, #d69e2e, #ed8936); height: 6px; border-radius: 12px 12px 0 0;"></div>
+      <div style="padding: 16px; display: flex; gap: 16px;">
+        <div style="background: #fef3c7; color: #d69e2e; width: 48px; height: 48px; border-radius: 10px; display: grid; place-items: center; font-size: 22px; flex-shrink: 0;">🕵</div>
+        <div style="flex: 1;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h3 style="margin: 0 0 6px 0; color: #2c3e50; font-size: 17px; font-weight: 600;">Find words</h3>
+            <span style="background: #f0fdf4; color: #166534; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 500;">Easy</span>
+          </div>
+          <p style="margin: 0; color: #666; font-size: 14px; line-height: 1.5;">გაიუმჯობესე თვალები რათა არწივივით თვალები გქონდეს! მოძებნე დამალული სიტყვები ასოების ზღვაში - ჩქარი და სახალისო. მზად ხარ რომ ყველა სიტყვა იპოვო?</p>
+          <div style="display: flex; gap: 8px; margin-top: 12px;">
+            <span style="background: #fef3c7; color: #92400e; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 500;">ვიზუალური სკანირება</span>
+            <span style="background: #f3e8ff; color: #4271c1; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 500;">სიტყვების ორთოგრაფია</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. odd one out -->
+    <div  class="exercise-card" data-level="level1"
+    onclick="startExercise('odd-one-out')" id="odd-one-out"
+         style="background: white; border-radius: 12px; padding: 0; cursor: pointer; 
+                box-shadow: 0 2px 6px rgba(0,0,0,0.05); transition: all 0.2s; border: 1px solid #f0f4f8;"
+         onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)'" 
+         onmouseout="this.style.transform='none'; this.style.boxShadow='0 2px 6px rgba(0,0,0,0.05)'">
+      <div style="background: linear-gradient(135deg, #e53e3e, #f56565); height: 6px; border-radius: 12px 12px 0 0;"></div>
+      <div style="padding: 16px; display: flex; gap: 16px;">
+        <div style="background: #fee2e2; color: #e53e3e; width: 48px; height: 48px; border-radius: 10px; display: grid; place-items: center; font-size: 22px; flex-shrink: 0;">🎯</div>
+        <div style="flex: 1;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h3 style="margin: 0 0 6px 0; color: #2c3e50; font-size: 17px; font-weight: 600;">Odd One Out</h3>
+            <span style="background: #f0fdf4; color: #166534; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 500;">Easy</span>
+          </div>
+          <p style="margin: 0; color: #666; font-size: 14px; line-height: 1.5;">იპოვე გამონაკლისი სურათების რიგში! გაართმევ თავს ამ გამოწვევას?</p>
+          <div style="display: flex; gap: 8px; margin-top: 12px;">
+            <span style="background: #fee2e2; color: #991b1b; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 500;">ობზერვაცია</span>
+            <span style="background: #eff6ff; color: #1e40af; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 500;">ლოგიკა</span>
+           <span style="background: #fff7ed; color: #9c4221; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 500;">ფიქრი</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+  </div>
+</div>
+
+
+<div id="letter-mastery-game" style="display: none; position: relative; width: 100%; height: 92vh; background: #f8fafc; overflow: hidden;">
+
+  <!-- Exercise Title Bar with Level Indicator -->
+  <div style="background: #4a6fa5; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center;">
+    <h2 style="color: white; margin: 0; font-size: 18px; font-weight: 500;">
+      <span style="margin-right: 10px;">🔤</span> 
+      Letter Mastery
+    </h2>
+    
+    <!-- Level Indicator Boxes (Top Right) -->
+    <div style="display: flex; gap: 8px;">
+      <div style="font-size: 14px; color: white; margin-right: 5px; font-weight: 500; margin-top: 3px;">Level</div>
+      <div id="level1" class="level-box active">1</div>
+      <div id="level2" class="level-box">2</div>
+      <div id="level3" class="level-box">3</div>
+    </div>
+    
+    <div>
+      <button onclick="closeExercise()" style="background: none; color: white; border: 1px solid rgba(255,255,255,0.3); padding: 6px 12px; border-radius: 4px; font-size: 14px;">
+        უკან დაბრუნება
+      </button>
+    </div>
+  </div>
+
+  <!-- Start Screen -->
+  <div id="startScreen" style="height: calc(100% - 54px); display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; text-align: center;">
+    <div style="max-width: 500px;">
+      <h3 style="color: #4a6fa5; font-size: 24px; margin-bottom: 20px;">Letter Mastery Challenge</h3>
+      <div style="background: white; border-radius: 12px; padding: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-bottom: 30px;">
+        <p style="color: #64748b; margin-bottom: 15px; line-height: 1.6;">
+          მოძებნე და მონიშნე ყველა ეკრანის ზემოთ აღნიშნული სიტყვა.
+        </p>
+        <p style="color: #64748b; margin-bottom: 15px; line-height: 1.6;">
+          შემდეგ დონეზე გადასასვლელად, დაასრულე 4 რაუნდი.
+        </p>
+      </div>
+      <button onclick="startGame()" style="background: #4a6fa5; color: white; border: none; padding: 14px 40px; border-radius: 8px; font-size: 16px; font-weight: 500; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+        თამაშის დაწყება
+      </button>
+    </div>
+  </div>
+
+  <!-- Game Screen -->
+  <div id="gameScreen" style="height: calc(100% - 54px); display: none; flex-direction: column;">
+    
+    <!-- Main Game Area -->
+    <div style="flex: 1; display: flex; flex-direction: column; padding: 20px; overflow-y: auto;">
+      
+      <!-- Target Display -->
+      <div style="text-align: center; margin-bottom: 20px;">
+        <div style="display: inline-block; background: #e2e8f0; padding: 8px 20px; border-radius: 20px;">
+          <span style="font-size: 14px; color: #4a6fa5;">იპოვე ყველა:</span>
+          <span id="targetLetter" style="font-size: 28px; font-weight: bold; color: #4a6fa5; margin-left: 10px;">B</span>
+        </div>
+        <div style="margin-top: 10px;">
+          <span id="foundCount" style="font-size: 16px; font-weight: bold; color: #4a6fa5;">0</span>
+          <span style="font-size: 16px; color: #94a3b8;">/</span>
+          <span id="totalTargets" style="font-size: 16px; color: #94a3b8;">6</span>
+        </div>
+      </div>
+
+      <!-- Game Grid -->
+      <div id="gameArea" style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; padding: 0 20px 20px; max-width: 800px; margin: 0 auto; flex: 1; align-content: center;">
+        <!-- Letters will be dynamically inserted here -->
+      </div>
+
+      <!-- Check Button -->
+      <div id="checkButtonContainer" style="display: none; text-align: center; margin-top: 20px; margin-bottom: 20px;">
+        <button onclick="verifyCompletion()" style="background: #4a6fa5; color: white; border: none; padding: 12px 30px; border-radius: 8px; font-size: 16px; font-weight: 500; cursor: pointer;">
+          პასუხის შემოწმება
+        </button>
+      </div>
+    </div>
+
+    <!-- Round Progress Boxes (Bottom) -->
+    <div style="padding: 15px 20px; background: #edf2f7; border-top: 1px solid #e2e8f0; display: flex; justify-content: center; gap: 15px;">
+      <div id="round1" class="round-box"></div>
+      <div id="round2" class="round-box"></div>
+      <div id="round3" class="round-box"></div>
+      <div id="round4" class="round-box"></div>
+    </div>
+  </div>
+
+  <!-- Success Modal -->
+  <div id="feedbackModal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 25px; border-radius: 12px; box-shadow: 0 5px 25px rgba(0,0,0,0.1); text-align: center; max-width: 300px; width: 90%; z-index: 100;">
+    <div style="width: 60px; height: 60px; background: #4a6fa5; border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center;">
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20 6L9 17L4 12" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <h3 id="resultTitle" style="color: #4a6fa5; margin-bottom: 10px; font-size: 18px;">ყოჩაღ!</h3>
+    <p id="resultMessage" style="color: #64748b; margin-bottom: 20px; font-size: 15px;">შენ იპოვე ყველა სწორად!</p>
+    <button onclick="startNewRound()" style="background: #4a6fa5; color: white; border: none; padding: 8px 20px; border-radius: 6px; font-size: 14px; cursor: pointer; width: 100%;">
+      გაგრძელება
+    </button>
+  </div>
+
+  <style>
+    /* Level and Round Box Styling */
+    .level-box {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 14px;
+      background: rgba(255,255,255,0.2);
+      color: white;
+      transition: all 0.3s;
+    }
+    
+    .level-box.active {
+      background: white;
+      color: #4a6fa5;
+      transform: scale(1.1);
+    }
+    
+    .round-box {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      position: relative;
+    }
+    
+    .round-box.completed::after {
+      content: "✓";
+      color: #4CAF50;
+      font-size: 20px;
+      font-weight: bold;
+    }
+    
+    /* Letter styling */
+    .letter {
+      aspect-ratio: 1/1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: bold;
+      background-color: #f1f5f9;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      user-select: none;
+      padding: 15px;
+    }
+    .letter:hover {
+      transform: scale(1.05);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .letter.found {
+      background-color: #4CAF50 !important;
+      color: white !important;
+      transform: scale(0.95);
+    }
+    .letter.incorrect {
+      background-color: #f44336 !important;
+      color: white !important;
+    }
+  </style>
+
+  <script>
+    // Game variables
+    let currentLevel = 1;
+    let roundsCompleted = 0;
+    const maxLevels = 3;
+    const maxRounds = 4;
+    let foundLetters = 0;
+    let totalLetters = 5;
+    let letters = [];
+    let foundElements = [];
+    let levelConfig = {
+      1: { targets: 5, gridSize: 6, fontSize: 36, similarLetters: 5 },
+      2: { targets: 8, gridSize: 6, fontSize: 32, similarLetters: 7 },
+      3: { targets: 10, gridSize: 7, fontSize: 28, similarLetters: 9 }
+    };
+
+    // Start the game (from start screen)
+    function startGame() {
+      document.getElementById('startScreen').style.display = 'none';
+      document.getElementById('gameScreen').style.display = 'flex';
+      
+      initGame();
+    }
+
+    // Initialize game
+    function initGame() {
+      foundLetters = 0;
+      foundElements = [];
+      document.getElementById('foundCount').textContent = '0';
+      document.getElementById('totalTargets').textContent = levelConfig[currentLevel].targets;
+      document.getElementById('checkButtonContainer').style.display = 'none';
+      
+      // Update displays
+      updateLevelDisplay();
+      updateRoundDisplay();
+      
+      generateLetters();
+    }
+
+    // Update level boxes
+    function updateLevelDisplay() {
+      for (let i = 1; i <= maxLevels; i++) {
+        const box = document.getElementById(`level${i}`);
+        box.classList.toggle('active', i === currentLevel);
+      }
+    }
+
+    // Update round boxes
+    function updateRoundDisplay() {
+      for (let i = 1; i <= maxRounds; i++) {
+        const box = document.getElementById(`round${i}`);
+        box.classList.toggle('completed', i <= roundsCompleted);
+      }
+    }
+
+    // Generate letters for the game
+    function generateLetters() {
+      const gameArea = document.getElementById('gameArea');
+      gameArea.innerHTML = '';
+      
+      const config = levelConfig[currentLevel];
+      totalLetters = config.targets;
+      
+      // Set grid size
+      gameArea.style.gridTemplateColumns = `repeat(${config.gridSize}, 1fr)`;
+      
+      const targetLetter = getRandomLetter();
+      document.getElementById('targetLetter').textContent = targetLetter;
+      
+      // Create letters array
+      letters = Array(config.targets).fill(targetLetter);
+      const similarLetters = getSimilarLettersGeorgian(targetLetter, config.similarLetters);
+      
+      // Add distractors
+      const totalCells = config.gridSize * config.gridSize;
+      for (let i = 0; i < totalCells - config.targets; i++) {
+        letters.push(similarLetters[i % similarLetters.length]);
+      }
+      
+      // Shuffle and display
+      letters = shuffleArray(letters);
+      letters.forEach((letter) => {
+        const letterElement = document.createElement('div');
+        letterElement.className = 'letter';
+        letterElement.dataset.value = letter;
+        letterElement.dataset.isTarget = (letter === targetLetter).toString();
+        letterElement.style.fontSize = `${config.fontSize}px`;
+        letterElement.textContent = letter;
+        
+        // Ensure visible styling
+        letterElement.style.display = "flex";
+        letterElement.style.alignItems = "center";
+        letterElement.style.justifyContent = "center";
+        letterElement.style.width = "100%";
+        letterElement.style.height = "100%";
+        
+        // Click handler
+        letterElement.onclick = function() {
+          if (!this.classList.contains('found')) {
+            checkLetter(this);
+          }
+        };
+        
+        gameArea.appendChild(letterElement);
+      });
+    }
+
+    // Check selected letter
+    function checkLetter(element) {
+      const targetLetter = document.getElementById('targetLetter').textContent;
+      const isCorrect = element.dataset.value === targetLetter;
+      
+      if (isCorrect) {
+        // Correct letter
+        foundLetters++;
+        element.classList.add('found');
+        foundElements.push(element);
+        document.getElementById('foundCount').textContent = foundLetters;
+        
+        // Check if all letters found
+        if (foundLetters >= totalLetters) {
+          document.getElementById('checkButtonContainer').style.display = 'block';
+        }
+      } else {
+        // Incorrect letter
+        element.classList.add('incorrect');
+        
+        setTimeout(() => {
+          element.classList.remove('incorrect');
+        }, 500);
+      }
+    }
+
+    // Verify all found letters are correct
+    function verifyCompletion() {
+      const targetLetter = document.getElementById('targetLetter').textContent;
+      let allCorrect = true;
+      
+      // Check all found elements
+      foundElements.forEach(el => {
+        if (el.dataset.value !== targetLetter) {
+          allCorrect = false;
+          el.classList.add('incorrect');
+        }
+      });
+      
+      // Show results
+      if (allCorrect) {
+        document.getElementById('resultTitle').textContent = "ყოჩაღ!";
+        document.getElementById('resultMessage').textContent = `შენ იპოვე ${totalLetters} ${targetLetter}!`;
+        document.getElementById('resultTitle').style.color = "#4a6fa5";
+        
+        // Update progress
+        completeRound();
+      } else {
+        document.getElementById('resultTitle').textContent = "თითქმის!";
+        document.getElementById('resultMessage').textContent = "ზოგი ასო არ იყო სწორი, თავიდან სცადე!";
+        document.getElementById('resultTitle').style.color = "#f44336";
+      }
+      
+      document.getElementById('feedbackModal').style.display = 'block';
+    }
+
+    // Complete a round and update progress
+    function completeRound() {
+      roundsCompleted++;
+      updateRoundDisplay();
+      
+      // Level up if completed all rounds
+      if (roundsCompleted >= maxRounds && currentLevel < maxLevels) {
+        roundsCompleted = 0;
+        currentLevel++;
+        updateLevelDisplay();
+      }
+    }
+
+    // Start new round
+    function startNewRound() {
+      document.getElementById('feedbackModal').style.display = 'none';
+      initGame();
+    }
+
+    // Helper functions
+    function getRandomLetter() {
+      const letters = ['ბ', 'დ', 'პ', 'წ', 'შ', 'ნ', 'მ'];
+      return letters[Math.floor(Math.random() * letters.length)];
+    }
+
+  function getSimilarLettersGeorgian(letter, count) {
+  const similarMap = {
+    'ბ': ['დ', 'პ', 'ფ', 'გ', 'წ', 'ძ', 'თ', 'ჭ', 'ხ'],
+    'დ': ['ბ', 'თ', 'ტ', 'წ', 'ზ', 'ყ', 'ჭ', 'ხ', 'ფ'],
+    'პ': ['ბ', 'ფ', 'ფ', 'თ', 'ქ', 'ჭ', 'ხ', 'ზ', 'შ'],
+    'წ': ['შ', 'შ', 'ჟ', 'ჭ', 'ფ', 'ხ', 'ჯ', 'ძ', 'ტ'],
+    'შ': ['წ', 'ჟ', 'ჭ', 'ხ', 'ზ', 'ჯ', 'ტ', 'ფ', 'ძ'],
+    'ნ': ['მ', 'უ', 'ლ', 'ხ', 'ჯ', 'ყ', 'ტ', 'ზ', 'ფ'],
+    'მ': ['ნ', 'უ', 'ლ', 'ვ', 'ფ', 'ყ', 'თ', 'ჯ', 'ხ']
+  };
+  const allSimilar = similarMap[letter] || ['ა', 'ს', 'ტ', 'ქ', 'ყ', 'ზ', 'ხ', 'ღ', 'ფ'];
+  return allSimilar.slice(0, count);
+}
+
+    function shuffleArray(array) {
+      return array.sort(() => Math.random() - 0.5);
+    }
+
+    function closeExercise() {
+      document.getElementById('letter-mastery-game').style.display = 'none';
+      document.getElementById('startScreen').style.display = 'flex';
+      document.getElementById('gameScreen').style.display = 'none';
+      document.getElementById('exercisesSection').style.display='block';
+      // Reset game state
+      currentLevel = 1;
+      roundsCompleted = 0;
+    }
+
+    // Initialize on load
+    window.onload = function() {
+      document.getElementById('startScreen').style.display = 'flex';
+      document.getElementById('gameScreen').style.display = 'none';
+    };
+  </script>
+</div>
+
+<div id="emoji-word-finder-game" style="display: none; position: relative; width: 100%; height: 92vh; background: #f8fafc; overflow: hidden;">
+
+  <!-- Game Header with Level Indicator -->
+  <div style="background: #4aa581; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center;">
+    <h2 style="color: white; margin: 0; font-size: 18px; font-weight: 500;">
+      <span style="margin-right: 10px;">🔍</span> 
+      Emoji Word Finder
+    </h2>
+    
+    <!-- Level Indicator -->
+    <div style="display: flex; gap: 8px; align-items: center;">
+      <div style="font-size: 14px; color: white; margin-right: 5px; font-weight: 500; margin-top: 3px;">Level</div>
+      <div id="level2-1" class="level-box-2 active-2">1</div>
+      <div id="level2-2" class="level-box-2">2</div>
+      <div id="level2-3" class="level-box-2">3</div>
+    </div>
+    
+    <div>
+      <button onclick="closeGame2()" style="background: none; color: white; border: 1px solid rgba(255,255,255,0.3); padding: 6px 12px; border-radius: 4px; font-size: 14px;">
+        უკან დაბრუნება
+      </button>
+    </div>
+  </div>
+
+  <!-- Start Screen -->
+  <div id="startScreen2" style="height: calc(100% - 54px); display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; text-align: center;">
+    <div style="max-width: 500px;">
+      <h3 style="color: #4aa581; font-size: 24px; margin-bottom: 20px;">Emoji Word Challenge</h3>
+      <div style="background: white; border-radius: 12px; padding: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-bottom: 30px;">
+        <p style="color: #64748b; margin-bottom: 15px; line-height: 1.6;">
+          იპოვე ემოჯის აღმნიშვნელი სიტყვა ასოების კონაში.
+        </p>
+        <p style="color: #64748b; margin-bottom: 15px; line-height: 1.6;">
+          სიტყვები შეიძლება იყოს ერთ მწკრივში, სვეტში ან დიაგონალზე ნებისმიერი მიმართულებით.
+        </p>
+        <p style="color: #64748b; line-height: 1.6;">
+          შემდეგ დონეზე გადასასვლელად, დაასრულე 4 რაუნდი.
+        </p>
+      </div>
+      <button onclick="startGame2()" style="background: #4aa581; color: white; border: none; padding: 14px 40px; border-radius: 8px; font-size: 16px; font-weight: 500; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+        თამაშის დაწყება
+      </button>
+    </div>
+  </div>
+
+  <!-- Game Screen -->
+  <div id="gameScreen2" style="height: calc(100% - 54px); display: none; flex-direction: column;">
+    
+    <!-- Game Content -->
+    <div style="flex: 1; display: flex; flex-direction: column; padding: 20px; overflow-y: auto;">
+      
+      <!-- Emoji Clues -->
+      <div style="text-align: center; margin-bottom: 20px;">
+        <div style="display: inline-block; background: #e2e8f0; padding: 12px 20px; border-radius: 20px;">
+          <span style="font-size: 14px; color: #4aa581;">იპოვე ყველა:</span>
+          <div id="targetEmojis2" style="display: flex; gap: 15px; margin-top: 10px; justify-content: center;">
+            <!-- Emojis will be inserted here -->
+          </div>
+        </div>
+        <div style="margin-top: 10px;">
+          <span id="foundCount2" style="font-size: 16px; font-weight: bold; color: #4aa581;">0</span>
+          <span style="font-size: 16px; color: #94a3b8;">/</span>
+          <span id="totalWords2" style="font-size: 16px; color: #94a3b8;">3</span>
+          <span style="font-size: 16px; color: #94a3b8;"> ნაპოვნი სიტყვა</span>
+        </div>
+      </div>
+
+      <!-- Word Grid -->
+      <div id="wordGrid2" style="margin: 0 auto; display: grid; gap: 16px; background: #e2e8f0; padding: 15px; border-radius: 8px;">
+        <!-- Letters will be generated here -->
+      </div>
+
+      <!-- Check Button -->
+      <div id="checkButtonContainer2" style="display: none; text-align: center; margin-top: 20px;">
+        <button onclick="checkAnswers2()" style="background: #4aa581; color: white; border: none; padding: 12px 30px; border-radius: 8px; font-size: 16px; font-weight: 500; cursor: pointer;">
+          პასუხის შემოწმება
+        </button>
+      </div>
+    </div>
+
+    <!-- Round Progress -->
+    <div style="padding: 15px 20px; background: #edf2f7; border-top: 1px solid #e2e8f0; display: flex; justify-content: center; gap: 15px;">
+      <div id="round2-1" class="round-box-2"></div>
+      <div id="round2-2" class="round-box-2"></div>
+      <div id="round2-3" class="round-box-2"></div>
+      <div id="round2-4" class="round-box-2"></div>
+    </div>
+  </div>
+
+  <!-- Feedback Modal -->
+  <div id="feedbackModal2" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 25px; border-radius: 12px; box-shadow: 0 5px 25px rgba(0,0,0,0.1); text-align: center; max-width: 300px; width: 90%; z-index: 100;">
+    <div id="resultIcon2" style="width: 60px; height: 60px; background: #4aa581; border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center;">
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20 6L9 17L4 12" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <h3 id="resultTitle2" style="color: #4aa581; margin-bottom: 10px; font-size: 18px;">ყოჩაღ!</h3>
+    <p id="resultMessage2" style="color: #64748b; margin-bottom: 20px; font-size: 15px;">შენ იპოვე 3 ივე სიტყვა სწორად!</p>
+    <button onclick="nextRound2()" style="background: #4aa581; color: white; border: none; padding: 8px 20px; border-radius: 6px; font-size: 14px; cursor: pointer; width: 100%;">
+      გააგრძელე
+    </button>
+  </div>
+
+  <style>
+    /* Level Boxes */
+    .level-box-2 {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 14px;
+      background: rgba(255,255,255,0.2);
+      color: white;
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+    
+    .level-box-2.active-2 {
+      background: white;
+      color: #4a6fa5;
+      transform: scale(1.1);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .level-box-2:not(.active-2):hover {
+      background: rgba(255,255,255,0.3);
+      transform: scale(1.05);
+    }
+    
+    /* Round Boxes */
+    .round-box-2 {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      position: relative;
+    }
+    
+    .round-box-2.completed-2::after {
+      content: "✓";
+      color: #4CAF50;
+      font-size: 20px;
+      font-weight: bold;
+    }
+    
+    /* Emoji Clues */
+    .emoji-clue {
+      font-size: 32px; /* Larger emoji size */
+      padding: 8px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    /* Letter Cells */
+    .letter-cell-2 {
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: white;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.2s;
+      margin: 2px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .letter-cell-2:hover {
+      transform: scale(1.05);
+    }
+    
+    .letter-cell-2.selected-2 {
+      background: #4a6fa5;
+      color: white;
+      transform: scale(0.95);
+    }
+    
+    .letter-cell-2.found-2 {
+      background: #4CAF50;
+      color: white;
+    }
+    
+    .letter-cell-2.incorrect-2 {
+      background: #f44336;
+      color: white;
+    }
+  </style>
+
+  <script>
+    // Game configuration with multiple variants for each level
+    const gameConfig2 = {
+      levels: {
+        1: { 
+          gridSize: 7, 
+          wordCount: 3,
+          variants: [
+            // Variant 1
+            [
+              { emoji: "🌞", word: "მზე"},
+              { emoji: "🌳", word: "ტყე" },
+              { emoji: "🐐", word: "თხა" }
+            ],
+            // Variant 2
+            [
+              { emoji: "🐦", word: "ჩიტი"  },
+              { emoji: "👅", word: "ენა" },
+              { emoji: "🥛", word: "რძე" }
+            ],
+            // Variant 3
+            [
+              { emoji: "🪨", word: "ქვა" },
+              { emoji: "✂️", word: "ჭრა" },
+              { emoji: "🏔️", word: "მთა" }
+            ],
+            // Variant 4
+            [
+              { emoji: "🐐", word: "თხა" },
+              { emoji: "🥛", word: "რძე" },
+              { emoji: "🪨", word: "ქვა" }
+            ]
+          ]
+        },
+        2: { 
+          gridSize: 7, 
+          wordCount: 4,
+          variants: [
+            // Variant 1
+            [
+              { emoji: "🐦", word: "ჩიტი" },
+              { emoji: "🦁", word: "ლომი" },
+              { emoji: "🫏", word: "ვირი" },
+              { emoji: "🐱", word: "კატა" }
+            ],
+            // Variant 2
+            [
+              { emoji: "🐶", word: "ძაღლი" },
+              { emoji: "🚢", word: "გემი" },
+              { emoji: "🌙", word: "მთვარე" },
+              { emoji: "🚪", word: "კარი" }, 
+            ],
+            // Variant 3
+            [
+              { emoji: "🪑", word: "სკამი " } ,
+              { emoji: "🏠", word: "სახლი " }, 
+              { emoji: "❄️", word: "ფიფქი" },
+              { emoji: "🚢", word: "გემი" },
+            ],
+            // Variant 4
+            [
+              { emoji: "🦁", word: "ლომი" },
+              { emoji: "🐱", word: "კატა" },
+              { emoji: "🐶", word: "ძაღლი" },
+              { emoji: "❄️", word: "ფიფქი" },
+            ]
+          ]
+        },
+        3: { 
+          gridSize: 8, 
+          wordCount: 5,
+          variants: [
+            // Variant 1
+            [
+              { emoji: "🍎", word: "ვაშლი" },
+              { emoji: "📖", word: "წიგნი" },
+              { emoji: "🎵", word: "მუსიკა" },
+              { emoji: "💧", word: "წყალი" },
+              { emoji: "🏠", word: "სახლი" }
+            ],
+            // Variant 2
+            [
+              { emoji: "🚀", word: "რაკეტა" },
+              { emoji: "🍼", word: "ბოთლი" },
+              { emoji: "🪑", word: "სკამი" },
+              { emoji: "🐘", word: "სპილო" },
+              { emoji: "🚪", word: "კარები" }
+            ],
+            // Variant 3
+            [
+              { emoji: "🐟", word: "თევზი" },
+              { emoji: "❄️", word: "ფიფქი" },
+              { emoji: "🥛", word: "რძე" },
+              { emoji: "👅", word: "ენა" },
+              { emoji: "🐐", word: "თხა" }
+            ],
+            // Variant 4
+            [
+              { emoji: "❄️", word: "ფიფქი" },
+              { emoji: "🚀", word: "რაკეტა" },
+              { emoji: "🍎", word: "ვაშლი" },
+              { emoji: "🫏", word: "ვირი" },
+              { emoji: "🌙", word: "მთვარე" },
+            ]
+          ]
+        }
+      }
+    };
+    
+    // Game state
+    let currentLevel2 = 1;
+    let roundsCompleted2 = 0;
+    let selectedCells2 = [];
+    let foundWords2 = [];
+    let currentEmojiWords2 = [];
+    let gridData2 = [];
+    const georgianLetters = 'აბგდევზთიკლმნოპჟრსტუფქღყშჩცძწჭხჯჰ';
+    
+    // Start the game
+    function startGame2() {
+      document.getElementById('startScreen2').style.display = 'none';
+      document.getElementById('gameScreen2').style.display = 'flex';
+      initRound2();
+    }
+    
+    // Initialize a new round
+    function initRound2() {
+      // Reset game state
+      selectedCells2 = [];
+      foundWords2 = [];
+      document.getElementById('foundCount2').textContent = '0';
+      
+      // Get level configuration
+      const level = gameConfig2.levels[currentLevel2];
+      document.getElementById('totalWords2').textContent = level.wordCount;
+      
+      // Get the variant for this round (cycling through the available variants)
+      const variantIndex = roundsCompleted2 % level.variants.length;
+      currentEmojiWords2 = [...level.variants[variantIndex]];
+      
+      // Display emoji clues
+      const emojiContainer = document.getElementById('targetEmojis2');
+      emojiContainer.innerHTML = '';
+      currentEmojiWords2.forEach(item => {
+        const emojiDiv = document.createElement('div');
+        emojiDiv.className = 'emoji-clue';
+        emojiDiv.textContent = item.emoji;
+        emojiContainer.appendChild(emojiDiv);
+      });
+      
+      // Generate grid with the actual words
+      const words = currentEmojiWords2.map(item => item.word);
+      gridData2 = generateGrid2(level.gridSize, words);
+      renderGrid2();
+      
+      // Update UI
+      updateLevelDisplay2();
+      updateRoundDisplay2();
+      document.getElementById('checkButtonContainer2').style.display = 'none';
+    }
+    
+    // Generate the letter grid with hidden words
+    function generateGrid2(size, words) {
+      // Initialize empty grid
+      const grid = Array(size).fill().map(() => Array(size).fill(''));
+      
+      // Place words
+      words.forEach(word => {
+        let placed = false;
+        while (!placed) {
+          const direction = Math.floor(Math.random() * 8);
+          const row = Math.floor(Math.random() * size);
+          const col = Math.floor(Math.random() * size);
+          
+          if (canPlaceWord2(grid, word, row, col, direction)) {
+            placeWord2(grid, word, row, col, direction);
+            placed = true;
+          }
+        }
+      });
+      
+      // Fill remaining spaces with random letters
+      for (let i = 0; i < size; i++) {
+        for (let j = 0; j < size; j++) {
+          if (grid[i][j] === '') {
+            grid[i][j] = georgianLetters[Math.floor(Math.random() * georgianLetters.length)];
+          }
+        }
+      }
+      
+      return grid;
+    }
+    
+    // Check if a word can be placed at a position
+    function canPlaceWord2(grid, word, row, col, direction) {
+      const size = grid.length;
+      const dr = [0, 1, 1, 1, 0, -1, -1, -1][direction];
+      const dc = [1, 1, 0, -1, -1, -1, 0, 1][direction];
+      
+      for (let i = 0; i < word.length; i++) {
+        const newRow = row + i * dr;
+        const newCol = col + i * dc;
+        
+        if (newRow < 0 || newRow >= size || newCol < 0 || newCol >= size) {
+          return false;
+        }
+        
+        if (grid[newRow][newCol] !== '' && grid[newRow][newCol] !== word[i]) {
+          return false;
+        }
+      }
+      
+      return true;
+    }
+    
+    // Place a word in the grid
+    function placeWord2(grid, word, row, col, direction) {
+      const dr = [0, 1, 1, 1, 0, -1, -1, -1][direction];
+      const dc = [1, 1, 0, -1, -1, -1, 0, 1][direction];
+      
+      for (let i = 0; i < word.length; i++) {
+        grid[row + i * dr][col + i * dc] = word[i];
+      }
+    }
+    
+    // Render the grid in the DOM
+    function renderGrid2() {
+      const wordGrid = document.getElementById('wordGrid2');
+      wordGrid.innerHTML = '';
+      const size = gridData2.length;
+      
+      // Set grid style
+      wordGrid.style.gridTemplateColumns = `repeat(${size}, 42px)`;
+      
+      // Create cells
+      for (let i = 0; i < size; i++) {
+        for (let j = 0; j < size; j++) {
+          const cell = document.createElement('div');
+          cell.className = 'letter-cell-2';
+          cell.textContent = gridData2[i][j].toUpperCase();
+          cell.dataset.row = i;
+          cell.dataset.col = j;
+          
+          cell.addEventListener('click', () => selectCell2(cell, i, j));
+          
+          wordGrid.appendChild(cell);
+        }
+      }
+    }
+    
+    // Handle cell selection
+    function selectCell2(cell, row, col) {
+      // If already found, ignore
+      if (cell.classList.contains('found-2')) return;
+      
+      // Toggle selection
+      if (cell.classList.contains('selected-2')) {
+        cell.classList.remove('selected-2');
+        selectedCells2 = selectedCells2.filter(c => c.row !== row || c.col !== col);
+      } else {
+        cell.classList.add('selected-2');
+        selectedCells2.push({ row, col, cell });
+      }
+      
+      // Check if we should enable the check button
+      document.getElementById('checkButtonContainer2').style.display = 
+        selectedCells2.length >= 3 ? 'block' : 'none';
+    }
+    
+    // Check if selected cells form a valid word
+    function checkAnswers2() {
+      // Get the selected letters
+      const selectedWord = selectedCells2.map(c => gridData2[c.row][c.col]).join('').toLowerCase();
+      const reversedWord = [...selectedWord].reverse().join('');
+      
+      // Check if it matches any target word
+      let isCorrect = false;
+      for (const item of currentEmojiWords2) {
+        if (!foundWords2.includes(item.word) && 
+            (item.word === selectedWord || item.word === reversedWord)) {
+          isCorrect = true;
+          foundWords2.push(item.word);
+          markCellsAsFound2();
+          break;
+        }
+      }
+      
+      // Update UI
+      if (isCorrect) {
+        document.getElementById('foundCount2').textContent = foundWords2.length;
+        if (foundWords2.length === currentEmojiWords2.length) {
+          showFeedback2(true);
+        } else {
+          clearSelection2();
+        }
+      } else {
+        markCellsAsIncorrect2();
+        setTimeout(() => clearSelection2(), 1000);
+      }
+    }
+    
+    // Mark cells as found (correct)
+    function markCellsAsFound2() {
+      selectedCells2.forEach(({ cell }) => {
+        cell.classList.remove('selected-2');
+        cell.classList.add('found-2');
+      });
+    }
+    
+    // Mark cells as incorrect
+    function markCellsAsIncorrect2() {
+      selectedCells2.forEach(({ cell }) => {
+        cell.classList.remove('selected-2');
+        cell.classList.add('incorrect-2');
+      });
+    }
+    
+    // Clear current selection
+    function clearSelection2() {
+      selectedCells2.forEach(({ cell }) => {
+        cell.classList.remove('selected-2', 'incorrect-2');
+      });
+      selectedCells2 = [];
+      document.getElementById('checkButtonContainer2').style.display = 'none';
+    }
+    
+    // Show feedback modal
+    function showFeedback2(isSuccess) {
+      if (isSuccess) {
+        document.getElementById('resultTitle2').textContent = "ყოჩაღ!";
+        document.getElementById('resultMessage2').textContent = `შენ იპოვე ყველა ${currentEmojiWords2.length}!`;
+        document.getElementById('resultTitle2').style.color = "#4aa581";
+        document.getElementById('resultIcon2').style.background = "#4aa581";
+      } else {
+        document.getElementById('resultTitle2').textContent = "თავიდან სცადე!";
+        document.getElementById('resultMessage2').textContent = "ზოგი სიტყვა არ იყო სწორი.";
+        document.getElementById('resultTitle2').style.color = "#f44336";
+        document.getElementById('resultIcon2').style.background = "#f44336";
+      }
+      document.getElementById('feedbackModal2').style.display = 'block';
+    }
+    
+    // Complete the current round
+    function completeRound2() {
+      roundsCompleted2++;
+      updateRoundDisplay2();
+      
+      if (roundsCompleted2 >= 4 && currentLevel2 < 3) {
+        roundsCompleted2 = 0;
+        currentLevel2++;
+        updateLevelDisplay2();
+      }
+    }
+    
+    // Start next round
+    function nextRound2() {
+      document.getElementById('feedbackModal2').style.display = 'none';
+      completeRound2();
+      initRound2();
+    }
+    
+    // Update level display
+    function updateLevelDisplay2() {
+      for (let i = 1; i <= 3; i++) {
+        const box = document.getElementById(`level2-${i}`);
+        box.style.background = i === currentLevel2 ? 'white' : 'rgba(255,255,255,0.2)';
+        box.style.color = i === currentLevel2 ? '#4aa581' : 'white';
+      }
+    }
+    
+    // Update round display
+    function updateRoundDisplay2() {
+      for (let i = 1; i <= 4; i++) {
+        const box = document.getElementById(`round2-${i}`);
+        box.className = i <= roundsCompleted2 ? 'round-box-2 completed-2' : 'round-box-2';
+      }
+    }
+    
+    // Close the game
+    function closeGame2() {
+      document.getElementById('emoji-word-finder-game').style.display = 'none';
+      document.getElementById('startScreen2').style.display = 'flex';
+      document.getElementById('gameScreen2').style.display = 'none';
+      document.getElementById('exercisesSection').style.display='block';
+      // Reset game state
+      currentLevel2 = 1;
+      roundsCompleted2 = 0;
+    }
+    
+    // Initialize on load
+    window.addEventListener('DOMContentLoaded', function() {
+      document.getElementById('startScreen2').style.display = 'flex';
+      document.getElementById('gameScreen2').style.display = 'none';
+    });
+  </script>
+</div>
+
+<div id="find-words-game" style="display: none; position: relative; width: 100%; height: 92vh; background: #f8fafc; overflow: hidden;">
+
+  <!-- Game Header with Level Indicator -->
+  <div style="background: #8a4daf; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center;">
+    <h2 style="color: white; margin: 0; font-size: 18px; font-weight: 500;">
+      <span style="margin-right: 10px;">🔍</span> 
+      Word Search Challenge
+    </h2>
+    
+    <!-- Level Indicator -->
+    <div style="display: flex; gap: 8px; align-items: center;">
+      <div style="font-size: 14px; color: white; margin-right: 5px; font-weight: 500; margin-top: 3px;">Level</div>
+      <div id="level-ws3-1" class="level-box-ws3 active-ws3">1</div>
+      <div id="level-ws3-2" class="level-box-ws3">2</div>
+      <div id="level-ws3-3" class="level-box-ws3">3</div>
+    </div>
+    
+    <div>
+      <button onclick="closeWordSearchGame3()" style="background: none; color: white; border: 1px solid rgba(255,255,255,0.3); padding: 6px 12px; border-radius: 4px; font-size: 14px;">
+        უკან დაბრუნება
+      </button>
+    </div>
+  </div>
+
+  <!-- Start Screen -->
+  <div id="startScreenWS3" style="height: calc(100% - 54px); display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; text-align: center;">
+    <div style="max-width: 500px;">
+      <h3 style="color: #8a4daf; font-size: 24px; margin-bottom: 20px;">Horizontal Word Search</h3>
+      <div style="background: white; border-radius: 12px; padding: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-bottom: 30px;">
+        <p style="color: #64748b; margin-bottom: 15px; line-height: 1.6;">
+          მოძებნე დამალული სიტყვა ასოების კონაში. სიტყვა მიუყვება მარცხნიდან მარჯვნივ.
+        </p>
+        <p style="color: #64748b; margin-bottom: 15px; line-height: 1.6;">
+          დონე 1: 1 დამალული სიტყვა<br>
+          დონე 2: 2 დამალული სიტყვა<br>
+          დონე 3: 3 დამალული სიტყვა
+        </p>
+        <p style="color: #64748b; line-height: 1.6;">
+          შემდეგ დონეზე გადასასვლელად, დაასრულე 4 რაუნდი.
+        </p>
+      </div>
+      <button onclick="startWordSearchGame3()" style="background: #8a4daf; color: white; border: none; padding: 14px 40px; border-radius: 8px; font-size: 16px; font-weight: 500; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+        თამაშის დაწყება
+      </button>
+    </div>
+  </div>
+
+  <!-- Game Screen -->
+  <div id="gameScreenWS3" style="height: calc(100% - 54px); display: none; flex-direction: column; align-items: center; justify-content: center;">
+    
+    <!-- Game Content -->
+    <div style="display: flex; flex-direction: column; align-items: center; width: 90%; max-width: 800px;">
+      
+      <!-- Instructions -->
+      <div style="text-align: center; margin-bottom: 20px;">
+        <div style="display: inline-block; background: #e2e8f0; padding: 12px 20px; border-radius: 20px;">
+          <span style="font-size: 14px; color: #8a4daf;">მოძებნე დამალული სიტყვა ასოების კონაში. სიტყვა მიუყვება მარცხნიდან მარჯვნივ.</span>
+        </div>
+        <div style="margin-top: 10px;">
+          <span id="foundCountWS3" style="font-size: 16px; font-weight: bold; color: #8a4daf;">0</span>
+          <span style="font-size: 16px; color: #94a3b8;">/</span>
+          <span id="totalWordsWS3" style="font-size: 16px; color: #94a3b8;">1</span>
+          <span style="font-size: 16px; color: #94a3b8;"> ნაპოვნი სიტყვა </span>
+        </div>
+      </div>
+
+      <!-- Word Row -->
+      <div id="wordRowWS3" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; background: #e2e8f0; padding: 15px; border-radius: 8px; margin-bottom: 20px; max-width: 100%; overflow-x: auto;">
+        <!-- Letters will be generated here -->
+      </div>
+
+      <!-- Check Button -->
+      <div id="checkButtonContainerWS3" style="display: none; text-align: center; margin-top: 10px;">
+        <button onclick="checkAnswersWS3()" style="background: #8a4daf; color: white; border: none; padding: 10px 25px; border-radius: 8px; font-size: 15px; font-weight: 500; cursor: pointer;">
+          პასუხის შემოწმება
+        </button>
+      </div>
+    </div>
+
+    <!-- Round Progress -->
+    <div style="padding: 15px 20px; background: #edf2f7; border-top: 1px solid #e2e8f0; display: flex; justify-content: center; gap: 15px; position: absolute; bottom: 0; width: 100%;">
+      <div id="roundWS3-1" class="round-box-ws3"></div>
+      <div id="roundWS3-2" class="round-box-ws3"></div>
+      <div id="roundWS3-3" class="round-box-ws3"></div>
+      <div id="roundWS3-4" class="round-box-ws3"></div>
+    </div>
+  </div>
+
+  <!-- Feedback Modal -->
+  <div id="feedbackModalWS3" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 25px; border-radius: 12px; box-shadow: 0 5px 25px rgba(0,0,0,0.1); text-align: center; max-width: 300px; width: 90%; z-index: 100;">
+    <div id="resultIconWS3" style="width: 60px; height: 60px; background: #8a4daf; border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center;">
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20 6L9 17L4 12" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <h3 id="resultTitleWS3" style="color: #8a4daf; margin-bottom: 10px; font-size: 18px;">ყოჩაღ!</h3>
+    <p id="resultMessageWS3" style="color: #64748b; margin-bottom: 20px; font-size: 15px;">შენ იპოვე ყველა სიტყვა!</p>
+    <button onclick="nextRoundWS3()" style="background: #8a4daf; color: white; border: none; padding: 8px 20px; border-radius: 6px; font-size: 14px; cursor: pointer; width: 100%;">
+      გაგრძელება
+    </button>
+  </div>
+
+  <style>
+    /* Level Boxes */
+    .level-box-ws3 {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 14px;
+      background: rgba(255,255,255,0.2);
+      color: white;
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+    
+    .level-box-ws3.active-ws3 {
+      background: white;
+      color: #8a4daf;
+      transform: scale(1.1);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .level-box-ws3:not(.active-ws3):hover {
+      background: rgba(255,255,255,0.3);
+      transform: scale(1.05);
+    }
+    
+    /* Round Boxes */
+    .round-box-ws3 {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      position: relative;
+    }
+    
+    .round-box-ws3.completed-ws3::after {
+      content: "✓";
+      color: #8a4daf;
+      font-size: 20px;
+      font-weight: bold;
+    }
+    
+    /* Letter Cells */
+    .letter-cell-ws3 {
+      width: 30px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: white;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.2s;
+      border-radius: 6px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      flex-shrink: 0;
+    }
+    
+    .letter-cell-ws3:hover {
+      transform: scale(1.05);
+    }
+    
+    .letter-cell-ws3.selected-ws3 {
+      background: #8a4daf;
+      color: white;
+      transform: scale(0.95);
+    }
+    
+    .letter-cell-ws3.found-ws3 {
+      background: #4CAF50;
+      color: white;
+    }
+    
+    .letter-cell-ws3.incorrect-ws3 {
+      background: #f44336;
+      color: white;
+    }
+  </style>
+
+  <script>
+    // Game configuration
+    const gameConfigWS3 = {
+      levels: {
+        1: { 
+          rowLength: 20,
+          wordCount: 1,
+          words: ["მთა", "მზე", "თმა", "ტბა", "ბიჭი", "ენა", "ეზო", "ტყე", "ორი", "რძე"]
+        },
+        2: { 
+          rowLength: 30,
+          wordCount: 2,
+          words: ["გემი", "ქარი", "ჭიქა", "ლამპა", "კარი", "თევზი", "ჩიტი", "იხვი", "წვიმა", "ლომი"]
+        },
+        3: { 
+          rowLength: 40,
+          wordCount: 3,
+          words: ["მაგიდა", "სახლი", "წყალი", "სკამი", "ბოთლი", "წიგნი", "კედელი", "კარადა", "წამალი", "კარები"]
+        }
+      }
+    };
+    
+    // Game state
+    let currentLevelWS3 = 1;
+    let roundsCompletedWS3 = 0;
+    let selectedCellsWS3 = [];
+    let foundWordsWS3 = [];
+    let hiddenWordsWS3 = [];
+    let rowDataWS3 = [];
+    
+    // Start the game
+    function startWordSearchGame3() {
+      document.getElementById('startScreenWS3').style.display = 'none';
+      document.getElementById('gameScreenWS3').style.display = 'flex';
+      initRoundWS3();
+    }
+    
+    // Initialize a new round
+    function initRoundWS3() {
+      // Reset game state
+      selectedCellsWS3 = [];
+      foundWordsWS3 = [];
+      document.getElementById('foundCountWS3').textContent = '0';
+      
+      // Get level configuration
+      const level = gameConfigWS3.levels[currentLevelWS3];
+      document.getElementById('totalWordsWS3').textContent = level.wordCount;
+      
+      // Select random words for this round
+      hiddenWordsWS3 = [];
+      const shuffledWords = [...level.words].sort(() => 0.5 - Math.random());
+      for (let i = 0; i < level.wordCount; i++) {
+        hiddenWordsWS3.push(shuffledWords[i]);
+      }
+      
+      // Generate row with the hidden words
+      rowDataWS3 = generateRowWS3(level.rowLength, hiddenWordsWS3);
+      renderRowWS3();
+      
+      // Update UI
+      updateLevelDisplayWS3();
+      updateRoundDisplayWS3();
+      document.getElementById('checkButtonContainerWS3').style.display = 'none';
+    }
+    
+    // Generate the letter row with hidden words
+    function generateRowWS3(length, words) {
+      // Initialize empty row
+      const row = Array(length).fill('');
+      
+      // Place words first
+      const wordPositions = [];
+      for (const word of words) {
+        let placed = false;
+        while (!placed) {
+          // Find a random position that doesn't overlap with existing words
+          const startPos = Math.floor(Math.random() * (length - word.length));
+          
+          // Check if this position is available
+          let canPlace = true;
+          for (let i = 0; i < word.length; i++) {
+            if (row[startPos + i] !== '' && 
+                wordPositions.some(pos => startPos + i >= pos.start && startPos + i < pos.end)) {
+              canPlace = false;
+              break;
+            }
+          }
+          
+          if (canPlace) {
+            // Place the word
+            for (let i = 0; i < word.length; i++) {
+              row[startPos + i] = word[i];
+            }
+            wordPositions.push({start: startPos, end: startPos + word.length});
+            placed = true;
+          }
+        }
+      }
+      
+      // Fill remaining spaces with random letters
+      const letters = 'აბგდევზთიკლმნოპჟრსტუფქღყშჩცძწჭხჯჰ';
+      for (let i = 0; i < length; i++) {
+        if (row[i] === '') {
+          row[i] = letters[Math.floor(Math.random() * letters.length)];
+        }
+      }
+      
+      return row;
+    }
+    
+    // Render the row in the DOM
+    function renderRowWS3() {
+      const wordRow = document.getElementById('wordRowWS3');
+      wordRow.innerHTML = '';
+      
+      // Create cells
+      for (let i = 0; i < rowDataWS3.length; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'letter-cell-ws3';
+        cell.textContent = rowDataWS3[i].toUpperCase();
+        cell.dataset.index = i;
+        
+        cell.addEventListener('click', () => selectCellWS3(cell, i));
+        
+        wordRow.appendChild(cell);
+      }
+    }
+    
+    // Handle cell selection
+    function selectCellWS3(cell, index) {
+      // If already found, ignore
+      if (cell.classList.contains('found-ws3')) return;
+      
+      // Toggle selection
+      if (cell.classList.contains('selected-ws3')) {
+        cell.classList.remove('selected-ws3');
+        selectedCellsWS3 = selectedCellsWS3.filter(c => c.index !== index);
+      } else {
+        // Only allow selecting adjacent cells
+        if (selectedCellsWS3.length > 0) {
+          const lastIndex = selectedCellsWS3[selectedCellsWS3.length - 1].index;
+          if (Math.abs(index - lastIndex) !== 1) {
+            return; // Not adjacent
+          }
+        }
+        
+        cell.classList.add('selected-ws3');
+        selectedCellsWS3.push({ index, cell });
+      }
+      
+      // Check if we should enable the check button
+      document.getElementById('checkButtonContainerWS3').style.display = 
+        selectedCellsWS3.length >= 3 ? 'block' : 'none';
+    }
+    
+    // Check if selected cells form a valid word
+    function checkAnswersWS3() {
+      // Get the selected letters in order
+      selectedCellsWS3.sort((a, b) => a.index - b.index);
+      const selectedWord = selectedCellsWS3.map(c => rowDataWS3[c.index]).join('').toLowerCase();
+      
+      // Check if it matches any target word
+      let isCorrect = false;
+      for (const word of hiddenWordsWS3) {
+        if (!foundWordsWS3.includes(word) && word === selectedWord) {
+          isCorrect = true;
+          foundWordsWS3.push(word);
+          markCellsAsFoundWS3();
+          break;
+        }
+      }
+      
+      // Update UI
+      if (isCorrect) {
+        document.getElementById('foundCountWS3').textContent = foundWordsWS3.length;
+        if (foundWordsWS3.length === hiddenWordsWS3.length) {
+          showFeedbackWS3(true);
+        } else {
+          clearSelectionWS3();
+        }
+      } else {
+        markCellsAsIncorrectWS3();
+        setTimeout(() => clearSelectionWS3(), 1000);
+      }
+    }
+    
+    // Mark cells as found (correct)
+    function markCellsAsFoundWS3() {
+      selectedCellsWS3.forEach(({ cell }) => {
+        cell.classList.remove('selected-ws3');
+        cell.classList.add('found-ws3');
+      });
+    }
+    
+    // Mark cells as incorrect
+    function markCellsAsIncorrectWS3() {
+      selectedCellsWS3.forEach(({ cell }) => {
+        cell.classList.remove('selected-ws3');
+        cell.classList.add('incorrect-ws3');
+      });
+    }
+    
+    // Clear current selection
+    function clearSelectionWS3() {
+      selectedCellsWS3.forEach(({ cell }) => {
+        cell.classList.remove('selected-ws3', 'incorrect-ws3');
+      });
+      selectedCellsWS3 = [];
+      document.getElementById('checkButtonContainerWS3').style.display = 'none';
+    }
+    
+    // Show feedback modal
+    function showFeedbackWS3(isSuccess) {
+      if (isSuccess) {
+        document.getElementById('resultTitleWS3').textContent = "Perfect!";
+        document.getElementById('resultMessageWS3').textContent = `You found all ${hiddenWordsWS3.length} hidden words!`;
+        document.getElementById('resultTitleWS3').style.color = "#8a4daf";
+        document.getElementById('resultIconWS3').style.background = "#8a4daf";
+      } else {
+        document.getElementById('resultTitleWS3').textContent = "Try Again!";
+        document.getElementById('resultMessageWS3').textContent = "That's not one of the hidden words.";
+        document.getElementById('resultTitleWS3').style.color = "#f44336";
+        document.getElementById('resultIconWS3').style.background = "#f44336";
+      }
+      document.getElementById('feedbackModalWS3').style.display = 'block';
+    }
+    
+    // Complete the current round
+    function completeRoundWS3() {
+      roundsCompletedWS3++;
+      updateRoundDisplayWS3();
+      
+      if (roundsCompletedWS3 >= 4 && currentLevelWS3 < 3) {
+        roundsCompletedWS3 = 0;
+        currentLevelWS3++;
+        updateLevelDisplayWS3();
+      }
+    }
+    
+    // Start next round
+    function nextRoundWS3() {
+      document.getElementById('feedbackModalWS3').style.display = 'none';
+      completeRoundWS3();
+      initRoundWS3();
+    }
+    
+    // Update level display
+    function updateLevelDisplayWS3() {
+      for (let i = 1; i <= 3; i++) {
+        const box = document.getElementById(`level-ws3-${i}`);
+        box.style.background = i === currentLevelWS3 ? 'white' : 'rgba(255,255,255,0.2)';
+        box.style.color = i === currentLevelWS3 ? '#8a4daf' : 'white';
+      }
+    }
+    
+    // Update round display
+    function updateRoundDisplayWS3() {
+      for (let i = 1; i <= 4; i++) {
+        const box = document.getElementById(`roundWS3-${i}`);
+        box.className = i <= roundsCompletedWS3 ? 'round-box-ws3 completed-ws3' : 'round-box-ws3';
+      }
+    }
+    
+    // Close the game
+    function closeWordSearchGame3() {
+      document.getElementById('find-words-game').style.display = 'none';
+      document.getElementById('startScreenWS3').style.display = 'flex';
+      document.getElementById('gameScreenWS3').style.display = 'none';
+      document.getElementById('exercisesSection').style.display='block';
+      // Reset game state
+      currentLevelWS3 = 1;
+      roundsCompletedWS3 = 0;
+
+      document.getElementById('find-words-game').style.display = 'none';
+      document.getElementById('startScreen2').style.display = 'flex';
+      document.getElementById('gameScreen2').style.display = 'none';
+      document.getElementById('exercisesSection').style.display='block';
+      // Reset game state
+    }
+    
+    // Initialize on load
+    window.addEventListener('DOMContentLoaded', function() {
+      document.getElementById('startScreenWS3').style.display = 'flex';
+      document.getElementById('gameScreenWS3').style.display = 'none';
+    });
+  </script>
+</div>
+
+<div id="odd-one-out-game" style="display: none; position: relative; width: 100%; height: 92vh; background: #f8fafc; overflow: hidden;">
+
+  <!-- Game Header (same as before) -->
+  <div style="background: #af4c63; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center;">
+    <h2 style="color: white; margin: 0; font-size: 18px; font-weight: 500;">
+      <span style="margin-right: 10px;">🎯</span> 
+      Odd One Out Challenge
+    </h2>
+    
+    <!-- Level Indicator -->
+    <div style="display: flex; gap: 8px; align-items: center;">
+      <div style="font-size: 14px; color: white; margin-right: 5px; font-weight: 500; margin-top: 3px;">Level</div>
+      <div id="level-ooo-1" class="level-box-ooo active-ooo">1</div>
+      <div id="level-ooo-2" class="level-box-ooo">2</div>
+      <div id="level-ooo-3" class="level-box-ooo">3</div>
+    </div>
+    
+    <div>
+      <button onclick="closeOddOneOutGame()" style="background: none; color: white; border: 1px solid rgba(255,255,255,0.3); padding: 6px 12px; border-radius: 4px; font-size: 14px;">
+        უკან დაბრუნება
+      </button>
+    </div>
+  </div>
+
+  <!-- Start Screen (same as before) -->
+  <div id="startScreenOOO" style="height: calc(100% - 54px); display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; text-align: center;">
+    <div style="max-width: 500px;">
+      <h3 style="color: #af4c63; font-size: 24px; margin-bottom: 20px;">Odd One Out Challenge</h3>
+      <div style="background: white; border-radius: 12px; padding: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-bottom: 30px;">
+        <p style="color: #64748b; margin-bottom: 15px; line-height: 1.6;">
+          მოძებნე ფოტო რომელიც სხვა ფოტოებს არ შეესაბამება!
+        </p>
+        <p style="color: #64748b; line-height: 1.6;">
+          შემდეგ დონეზე გადასასვლელად, დაასრულე 4 რაუნდი.
+        </p>
+      </div>
+      <button onclick="startOddOneOutGame()" style="background: #af4c63; color: white; border: none; padding: 14px 40px; border-radius: 8px; font-size: 16px; font-weight: 500; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+        თამაშის დაწყება
+      </button>
+    </div>
+  </div>
+
+  <!-- Game Screen -->
+  <div id="gameScreenOOO" style="height: calc(100% - 54px); display: none; flex-direction: column; align-items: center; justify-content: center;">
+    
+    <!-- Game Content -->
+    <div style="display: flex; flex-direction: column; align-items: center; width: 90%; max-width: 800px;">
+      
+      <!-- Instructions -->
+      <div style="text-align: center; margin-bottom: 20px;">
+        <div style="display: inline-block; background: #e2e8f0; padding: 12px 20px; border-radius: 20px;">
+          <span style="font-size: 14px; color: #af4c63;">მოძებნე ფოტო რომელიც სხვა ფოტოებს არ შეესაბამება!</span>
+        </div>
+        <div style="margin-top: 10px;">
+          <span id="roundCountOOO" style="font-size: 16px; font-weight: bold; color: #af4c63;">1</span>
+          <span style="font-size: 16px; color: #94a3b8;">/4 რაუნდი შეასრულე ჯერ</span>
+        </div>
+      </div>
+
+      <!-- Images Row -->
+      <div id="imagesRowOOO" style="display: flex; gap: 10px; margin-bottom: 20px; overflow-x: auto; padding: 10px 0;">
+        <!-- Images will be inserted here -->
+      </div>
+
+      <!-- Check Button (hidden initially) -->
+      <button id="checkButtonOOO" onclick="checkAnswerOOO()" style="display: none; background: #af4c63; color: white; border: none; padding: 10px 30px; border-radius: 8px; font-size: 16px; font-weight: 500; cursor: pointer; margin-top: 10px;">
+        Check Answer
+      </button>
+
+      <!-- Feedback Message -->
+      <div id="feedbackMessageOOO" style="height: 24px; margin: 10px 0; font-weight: bold;"></div>
+    </div>
+
+    <!-- Round Progress -->
+    <div style="padding: 15px 20px; background: #edf2f7; border-top: 1px solid #e2e8f0; display: flex; justify-content: center; gap: 15px; position: absolute; bottom: 0; width: 100%;">
+      <div id="roundOOO-1" class="round-box-ooo"></div>
+      <div id="roundOOO-2" class="round-box-ooo"></div>
+      <div id="roundOOO-3" class="round-box-ooo"></div>
+      <div id="roundOOO-4" class="round-box-ooo"></div>
+    </div>
+  </div>
+
+  <style>
+    /* Level and Round Boxes (same as before) */
+    .level-box-ooo {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 14px;
+      background: rgba(255,255,255,0.2);
+      color: white;
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+    
+    .level-box-ooo.active-ooo {
+      background: white;
+      color: #af4c63;
+      transform: scale(1.1);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .round-box-ooo {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      position: relative;
+    }
+    
+    .round-box-ooo.completed-ooo::after {
+      content: "✓";
+      color: #af4c63;
+      font-size: 20px;
+      font-weight: bold;
+    }
+    
+    /* Image Boxes - Updated for horizontal layout */
+    .image-box-ooo {
+      width: 120px;
+      height: 120px;
+      min-width: 120px;
+      background: white;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+    
+    .image-box-ooo:hover {
+      transform: scale(1.03);
+    }
+    
+    .image-box-ooo.selected-ooo {
+      transform: scale(0.97);
+      box-shadow: 0 0 0 3px #af4c63;
+    }
+    
+    .image-box-ooo img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+  </style>
+
+  <script>
+    // Game configuration
+    const gameConfigOOO = {
+      levels: {
+        1: {
+          rounds: [
+            {
+              similar: ["PhotosForOddOneOut/1lvl1round1.jpg", "PhotosForOddOneOut/2lvl1round1.jpg", "PhotosForOddOneOut/4lvl1round1.jpg", "PhotosForOddOneOut/5lvl1round1.jpg"],
+              different: "PhotosForOddOneOut/3lvl1round1.jpg"
+            },
+            {
+              similar: ["PhotosForOddOneOut/1lvl1round2.jpg", "PhotosForOddOneOut/2lvl1round2.jpg", "PhotosForOddOneOut/3lvl1round2.jpg",  "PhotosForOddOneOut/5lvl1round2.jpg"],
+              different: "PhotosForOddOneOut/4lvl1round2.jpg"
+            },
+            {
+              similar: ["PhotosForOddOneOut/1lvl1round3.jpg", "PhotosForOddOneOut/2lvl1round3.jpg", "PhotosForOddOneOut/3lvl1round3.jpg",  "PhotosForOddOneOut/4lvl1round3.jpg"],
+              different: "PhotosForOddOneOut/5lvl1round3.jpg"
+            },
+            {
+              similar: ["PhotosForOddOneOut/1lvl1round4.jpg", "PhotosForOddOneOut/2lvl1round4.jpg", "PhotosForOddOneOut/4lvl1round4.jpg",  "PhotosForOddOneOut/5lvl1round4.jpg"],
+              different: "PhotosForOddOneOut/3lvl1round4.jpg"
+            },
+          ]
+        },
+        2: {
+          rounds: [
+            {
+              similar: ["PhotosForOddOneOut/1lvl2round1.jpg", "PhotosForOddOneOut/3lvl2round1.jpg", "PhotosForOddOneOut/4lvl2round1.jpg",  "PhotosForOddOneOut/5lvl2round1.jpg"],
+              different: "PhotosForOddOneOut/2lvl2round1.jpg"
+            },
+            {
+              similar: ["PhotosForOddOneOut/2lvl2round2.jpg", "PhotosForOddOneOut/3lvl2round2.jpg", "PhotosForOddOneOut/4lvl2round2.jpg",  "PhotosForOddOneOut/5lvl2round2.jpg"],
+              different: "PhotosForOddOneOut/1lvl2round2.jpg"
+            },
+            {
+              similar: ["PhotosForOddOneOut/1lvl2round3.jpg", "PhotosForOddOneOut/2lvl2round3.jpg", "PhotosForOddOneOut/3lvl2round3.jpg",  "PhotosForOddOneOut/4lvl2round3.jpg"],
+              different: "PhotosForOddOneOut/5lvl2round3.jpg"
+            },
+            {
+              similar: ["PhotosForOddOneOut/1lvl2round4.jpg", "PhotosForOddOneOut/2lvl2round4.jpg", "PhotosForOddOneOut/4lvl2round4.jpg",  "PhotosForOddOneOut/5lvl2round4.jpg"],
+              different: "PhotosForOddOneOut/3lvl2round4.jpg"
+            },
+          ]
+        },
+        3: {
+          rounds: [
+            {
+              similar: ["PhotosForOddOneOut/1lvl3round1.jpg", "PhotosForOddOneOut/3lvl3round1.jpg", "PhotosForOddOneOut/4lvl3round1.jpg",  "PhotosForOddOneOut/5lvl3round1.jpg"],
+              different: "PhotosForOddOneOut/2lvl3round1.jpg"
+            },
+            {
+              similar: ["PhotosForOddOneOut/2lvl3round2.jpg", "PhotosForOddOneOut/3lvl3round2.jpg", "PhotosForOddOneOut/4lvl3round2.jpg",  "PhotosForOddOneOut/5lvl3round2.jpg"],
+              different: "PhotosForOddOneOut/1lvl3round2.jpg"
+            },
+            {
+              similar: ["PhotosForOddOneOut/1lvl3round3.jpg", "PhotosForOddOneOut/2lvl3round3.jpg", "PhotosForOddOneOut/3lvl3round3.jpg",  "PhotosForOddOneOut/4lvl3round3.jpg"],
+              different: "PhotosForOddOneOut/5lvl3round3.jpg"
+            },
+            {
+              similar: ["PhotosForOddOneOut/1lvl3round4.jpg", "PhotosForOddOneOut/2lvl3round4.jpg", "PhotosForOddOneOut/3lvl3round4.jpg",  "PhotosForOddOneOut/5lvl3round4.jpg"],
+              different: "PhotosForOddOneOut/4lvl3round4.jpg"
+            },
+          ]
+        }
+      }
+    };
+    
+    // Game state
+    let currentLevelOOO = 1;
+    let currentRoundOOO = 0;
+    let roundsCompletedOOO = 0;
+    let correctAnswerOOO = null;
+    let selectedImageOOO = null;
+    
+    // Start the game
+    function startOddOneOutGame() {
+      document.getElementById('startScreenOOO').style.display = 'none';
+      document.getElementById('gameScreenOOO').style.display = 'flex';
+      loadRoundOOO();
+    }
+    
+    // Load a round
+    function loadRoundOOO() {
+      const level = gameConfigOOO.levels[currentLevelOOO];
+      currentRoundOOO++;
+      
+      if (currentRoundOOO > level.rounds.length) {
+        completeLevelOOO();
+        return;
+      }
+      
+      const round = level.rounds[currentRoundOOO - 1];
+      correctAnswerOOO = round.different;
+      
+      // Combine and shuffle images
+      const allImages = [...round.similar, round.different];
+      shuffleArrayOOO(allImages);
+      
+      // Display images in a row
+      const row = document.getElementById('imagesRowOOO');
+      row.innerHTML = '';
+      
+      allImages.forEach((imgSrc, index) => {
+        const imgBox = document.createElement('div');
+        imgBox.className = 'image-box-ooo';
+        imgBox.dataset.src = imgSrc;
+        
+        const img = document.createElement('img');
+        img.src = imgSrc;
+        img.alt = "Game image";
+        
+        imgBox.appendChild(img);
+        imgBox.addEventListener('click', () => selectImageOOO(imgBox));
+        row.appendChild(imgBox);
+      });
+      
+      // Reset selection
+      selectedImageOOO = null;
+      document.getElementById('checkButtonOOO').style.display = 'none';
+      document.getElementById('feedbackMessageOOO').textContent = '';
+      
+      // Update UI
+      document.getElementById('roundCountOOO').textContent = roundsCompletedOOO;
+      updateLevelDisplayOOO();
+      updateRoundDisplayOOO();
+    }
+    
+    // Select an image
+    function selectImageOOO(imgBox) {
+      // Deselect previous selection
+      if (selectedImageOOO) {
+        selectedImageOOO.classList.remove('selected-ooo');
+      }
+      
+      // Select new image
+      imgBox.classList.add('selected-ooo');
+      selectedImageOOO = imgBox;
+      
+      // Show check button
+      document.getElementById('checkButtonOOO').style.display = 'block';
+    }
+    
+    // Check the answer
+    function checkAnswerOOO() {
+      if (!selectedImageOOO) return;
+      
+      const isCorrect = selectedImageOOO.dataset.src === correctAnswerOOO;
+      const feedback = document.getElementById('feedbackMessageOOO');
+      
+      if (isCorrect) {
+        feedback.textContent = "სწორია! 🎉";
+        feedback.style.color = "#4CAF50";
+        
+        setTimeout(() => {
+          roundsCompletedOOO++;
+          if (roundsCompletedOOO >= 4) {
+            completeLevelOOO();
+          } else {
+            loadRoundOOO();
+          }
+        }, 1000);
+      } else {
+        feedback.textContent = "არასწორია, თავიდან სცადე";
+        feedback.style.color = "#f44336";
+        selectedImageOOO.classList.remove('selected-ooo');
+        selectedImageOOO = null;
+        document.getElementById('checkButtonOOO').style.display = 'none';
+      }
+    }
+    
+    // Complete the current level
+    function completeLevelOOO() {
+      if (currentLevelOOO < 3) {
+        currentLevelOOO++;
+        currentRoundOOO = 0;
+        roundsCompletedOOO = 0;
+        loadRoundOOO();
+      } else {
+        // Game completed
+        alert("ყოჩაღ! შენ შეასრულე ყველა ლეველი სწორად!");
+        closeOddOneOutGame();
+      }
+    }
+    
+    // Update level display
+    function updateLevelDisplayOOO() {
+      for (let i = 1; i <= 3; i++) {
+        const box = document.getElementById(`level-ooo-${i}`);
+        box.style.background = i === currentLevelOOO ? 'white' : 'rgba(255,255,255,0.2)';
+        box.style.color = i === currentLevelOOO ? '#6a4caf' : 'white';
+      }
+    }
+    
+    // Update round display
+    function updateRoundDisplayOOO() {
+      for (let i = 1; i <= 4; i++) {
+        const box = document.getElementById(`roundOOO-${i}`);
+        box.className = i <= roundsCompletedOOO ? 'round-box-ooo completed-ooo' : 'round-box-ooo';
+      }
+    }
+    
+    // Close the game
+    function closeOddOneOutGame() {
+      document.getElementById('odd-one-out-game').style.display = 'none';
+      document.getElementById('startScreenOOO').style.display = 'flex';
+      document.getElementById('gameScreenOOO').style.display = 'none';
+      document.getElementById('exercisesSection').style.display='block';
+      // Reset game state
+      currentLevelOOO = 1;
+      currentRoundOOO = 0;
+      roundsCompletedOOO = 0;
+    }
+    
+    // Helper function to shuffle array
+    function shuffleArrayOOO(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+    
+    // Initialize on load
+    window.addEventListener('DOMContentLoaded', function() {
+      document.getElementById('startScreenOOO').style.display = 'flex';
+      document.getElementById('gameScreenOOO').style.display = 'none';
+    });
+  </script>
+</div>
+
+<div id="gaze-maze-game" style="display: none; position: relative; width: 100%; height: 92vh; background: #f8fafc; overflow: hidden;">
+
+  <!-- Game Header -->
+  <div style="background: #5e4caf; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center;">
+    <h2 style="color: white; margin: 0; font-size: 18px; font-weight: 500;">
+      <span style="margin-right: 10px;">👀</span> 
+      Gaze Tracking Challenge 
+    </h2>
+    
+    <div>
+      <button onclick="closeGame5()" style="background: none; color: white; border: 1px solid rgba(255,255,255,0.3); padding: 6px 12px; border-radius: 4px; font-size: 14px;">
+        უკან დაბრუნება
+      </button>
+    </div>
+  </div>
+
+  <!-- Start Screen -->
+  <div id="startScreen5" style="height: calc(100% - 54px); display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; text-align: center;">
+    <div style="max-width: 500px;">
+      <h3 style="color: #5e4caf; font-size: 24px; margin-bottom: 20px;">Gaze Tracking Challenge</h3>
+      <div style="background: white; border-radius: 12px; padding: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-bottom: 30px;">
+        <p style="color: #64748b; margin-bottom: 15px; line-height: 1.6;">
+          თვალი გააყოლე მოძრავ ბურთს. ბურთი ყოველი რაუნდის მერე აჩქარდება
+        </p>
+        <p style="color: #64748b; line-height: 1.6;">
+          შემდეგ დონეზე გადასასვლელად, დაასრულე 4 რაუნდი.
+        </p>
+      </div>
+      <button onclick="startGame5()" style="background: #5e4caf; color: white; border: none; padding: 14px 40px; border-radius: 8px; font-size: 16px; font-weight: 500; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+        თამაშის დაწყება
+      </button>
+    </div>
+  </div>
+
+  <!-- Game Screen -->
+  <div id="gameScreen5" style="height: calc(100% - 54px); display: none; flex-direction: column; align-items: center; justify-content: center; position: relative;">
+    
+    <!-- Timer Display -->
+    <div id="timer5" style="font-size: 24px; font-weight: bold; color: #5e4caf; margin-bottom: 20px;">5</div>
+    
+    <!-- Play Area Container -->
+    <div id="playArea5" style="width: 80%; height: 60%; background: #e2e8f0; border-radius: 12px; position: relative; overflow: hidden;">
+      <!-- Moving Ball -->
+      <div id="movingBall5" style="position: absolute; width: 40px; height: 40px; background: #5e4caf; border-radius: 50%; transform: translate(-50%, -50%); left: 50%; top: 50%;"></div>
+    </div>
+  </div>
+
+  <!-- Round Progress -->
+  <div style="position: absolute; bottom: 0; width: 100%; padding: 15px 0; background: #edf2f7; border-top: 1px solid #e2e8f0; display: flex; justify-content: center; gap: 15px; z-index: 10;">
+    <div id="round5-1" class="round-box5"></div>
+    <div id="round5-2" class="round-box5"></div>
+    <div id="round5-3" class="round-box5"></div>
+    <div id="round5-4" class="round-box5"></div>
+  </div>
+  
+  <!-- Results Box -->
+  <div id="resultsBox5" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; border-radius: 12px; box-shadow: 0 5px 25px rgba(0,0,0,0.2); text-align: center; z-index: 100;">
+    <h3 id="resultsTitle5" style="color: #5e4caf; margin-bottom: 15px;">რაუნდი შესრულებულია!</h3>
+    <div id="scoreDisplay5" style="font-size: 24px; font-weight: bold; margin-bottom: 20px;">ფოკუსის ქულა: <span id="scoreValue5">0</span>%</div>
+    <p id="feedbackMessage5" style="color: #64748b; margin-bottom: 20px;">შენი ფოკუსი უკეთესი ხდება!</p>
+    <button onclick="startNewRound5()" style="background: #5e4caf; color: white; border: none; padding: 10px 25px; border-radius: 8px; font-size: 16px; cursor: pointer;">შემდეგი რაუნდი</button>
+  </div>
+
+  <!-- Completion Modal -->
+  <div id="completionModal5" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; border-radius: 12px; box-shadow: 0 5px 25px rgba(0,0,0,0.2); text-align: center; z-index: 100;">
+    <h3 style="color: #5e4caf; margin-bottom: 15px;">ჩელენჯი შერულებულია! 🎉</h3>
+    <p style="color: #64748b; margin-bottom: 20px;">შენ შეასრულე 4 რაუნდი, ყოჩაღ!</p>
+    <button onclick="returnToExercises5()" style="background: #5e4caf; color: white; border: none; padding: 10px 25px; border-radius: 8px; font-size: 16px; cursor: pointer;">უკან დაბრუნება</button>
+  </div>
+
+  <style>
+    .round-box5 {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      position: relative;
+    }
+    
+    .round-box5.completed5::after {
+      content: "✓";
+      color: #5e4caf;
+      font-size: 20px;
+      font-weight: bold;
+      position: absolute;
+    }
+    
+    #movingBall5 {
+      transition: left 0.5s ease-out, top 0.5s ease-out;
+      will-change: left, top;
+    }
+    
+    #gameScreen5 {
+      padding-bottom: 80px;
+    }
+  </style>
+
+  <script>
+    // Game state variables
+    let currentSpeed5 = 80;
+    let currentRound5 = -1;
+    let gameInterval5;
+    let timerInterval5;
+    let timeLeft5 = 5;
+    let targetX5 = 0;
+    let targetY5 = 0;
+    
+    // Eye tracking variables
+    let gazePredictions5 = [];
+    let ballPositions5 = [];
+    let isTracking5 = false;
+    let isEyeTrackingActive5 = false;
+
+    // DOM elements
+    const ball5 = document.getElementById('movingBall5');
+    const timer5 = document.getElementById('timer5');
+    const playArea5 = document.getElementById('playArea5');
+    const resultsBox5 = document.getElementById('resultsBox5');
+
+    // Initialize eye tracking (reuses existing WebGazer model)
+    function initEyeTracking5() {
+      if (!window.webgazer || isEyeTrackingActive5) return;
+      
+      webgazer.setGazeListener(function(data) {
+        if (!data || !isTracking5) return;
+        
+        const rect = playArea5.getBoundingClientRect();
+        gazePredictions5.push({
+          x: data.x - rect.left,
+          y: data.y - rect.top,
+          time: Date.now()
+        });
+        
+        // Keep only recent data (last 3 seconds)
+        const now = Date.now();
+        gazePredictions5 = gazePredictions5.filter(p => now - p.time < 3000);
+      });
+      
+      webgazer.showPredictionPoints(false);
+      isEyeTrackingActive5 = true;
+    }
+
+    // Start the game
+    function startGame5() {
+      document.getElementById('startScreen5').style.display = 'none';
+      document.getElementById('gameScreen5').style.display = 'flex';
+      
+      // Reset tracking data
+      gazePredictions5 = [];
+      ballPositions5 = [];
+      isTracking5 = true;
+      
+      // Initialize eye tracking
+      initEyeTracking5();
+      
+      // Update round display
+      currentRound5++;
+      updateRoundDisplay5();
+      
+      // Set initial ball position
+      targetX5 = 20 + Math.random() * (playArea5.offsetWidth - 40);
+      targetY5 = 20 + Math.random() * (playArea5.offsetHeight - 40);
+      ball5.style.left = targetX5 + 'px';
+      ball5.style.top = targetY5 + 'px';
+      
+      // Start game loop
+      gameInterval5 = setInterval(moveBall5, 50);
+      
+      // Start timer
+      timeLeft5 = 5;
+      updateTimer5();
+      timerInterval5 = setInterval(() => {
+        timeLeft5--;
+        updateTimer5();
+        if (timeLeft5 <= 0) endRound5();
+      }, 1000);
+    }
+
+    // Move the ball randomly
+    function moveBall5() {
+      const moveX5 = (Math.random() * 2 - 1) * currentSpeed5;
+      const moveY5 = (Math.random() * 2 - 1) * currentSpeed5;
+      
+      targetX5 = Math.max(20, Math.min(playArea5.offsetWidth - 20, targetX5 + moveX5));
+      targetY5 = Math.max(20, Math.min(playArea5.offsetHeight - 20, targetY5 + moveY5));
+      
+      ball5.style.left = targetX5 + 'px';
+      ball5.style.top = targetY5 + 'px';
+    }
+
+    // Update timer and record ball position
+    function updateTimer5() {
+      timer5.textContent = timeLeft5;
+      ballPositions5.push({
+        x: targetX5,
+        y: targetY5,
+        time: Date.now()
+      });
+    }
+
+    // End the current round
+    function endRound5() {
+      isTracking5 = false;
+      clearInterval(gameInterval5);
+      clearInterval(timerInterval5);
+      
+      // Increase speed for next round
+      currentSpeed5 *= 1.3;
+      
+      // Calculate and show results
+      showResults5(calculateScore5());
+    }
+
+    // Calculate accuracy score
+    function calculateScore5() {
+      if (gazePredictions5.length === 0 || ballPositions5.length === 0) return 0;
+      
+      let totalDistance = 0;
+      let validComparisons = 0;
+      
+      ballPositions5.forEach(ballPos => {
+        const closestGaze = gazePredictions5.reduce((prev, curr) => 
+          Math.abs(curr.time - ballPos.time) < Math.abs(prev.time - ballPos.time) ? curr : prev);
+        
+        const distance = Math.sqrt(
+          Math.pow(closestGaze.x - ballPos.x, 2) + 
+          Math.pow(closestGaze.y - ballPos.y, 2)
+        );
+        
+        totalDistance += distance;
+        validComparisons++;
+      });
+      
+      const avgDistance = totalDistance / validComparisons;
+      const maxDistance = Math.sqrt(
+        Math.pow(playArea5.offsetWidth, 2) + 
+        Math.pow(playArea5.offsetHeight, 2)
+      );
+      
+      return Math.max(0, 100 - Math.round((avgDistance / maxDistance) * 100));
+    }
+
+    // Show results with feedback
+    function showResults5(score) {
+      document.getElementById('scoreValue5').textContent = score;
+      
+      const title5 = document.getElementById('resultsTitle5');
+      const message5 = document.getElementById('feedbackMessage5');
+      
+      if (score < 15) {
+        title5.textContent = "კიდევ სცადე!";
+        message5.textContent = "შეეცადე ბურთზე უკეთ კონცენტრირდე";
+      } 
+      else if (score < 70) {
+        title5.textContent = "კარგია!";
+        message5.textContent = "შენ კარგად აყოლებ ბურთს თვალს!";
+      } 
+      else {
+        title5.textContent = "ბრავო!";
+        message5.textContent = "საოცარი ხარ, ყოჩაღ!";
+      }
+      
+      resultsBox5.style.display = 'block';
+    }
+
+    // Start a new round or finish game
+    function startNewRound5() {
+      resultsBox5.style.display = 'none';
+      if (currentRound5 < 3) {
+        startGame5();
+      } else {
+        showCompletion();
+      }
+    }
+
+    // Show completion message
+    function showCompletion() {
+      document.getElementById('completionModal5').style.display = 'block';
+    }
+
+    // Return to exercises
+    function returnToExercises5() {
+      document.getElementById('gaze-maze-game').style.display = 'none';
+      document.getElementById('exercisesSection').style.display = 'block';
+      resetGame5();
+    }
+
+    // Reset game state
+    function resetGame5() {
+      // Clear round indicators
+      for (let i = 1; i <= 4; i++) {
+        document.getElementById(`round5-${i}`).className = 'round-box5';
+      }
+      
+      // Reset variables
+      currentRound5 = -1;
+      currentSpeed5 = 80;
+      isTracking5 = false;
+      clearInterval(gameInterval5);
+      clearInterval(timerInterval5);
+      
+      // Clear WebGazer listener
+      if (window.webgazer && webgazer.clearGazeListener) {
+        webgazer.clearGazeListener();
+      }
+      isEyeTrackingActive5 = false;
+      
+      // Show start screen
+      document.getElementById('startScreen5').style.display = 'flex';
+      document.getElementById('gameScreen5').style.display = 'none';
+      document.getElementById('completionModal5').style.display = 'none';
+    }
+
+    // Close game
+    function closeGame5() {
+      returnToExercises5();
+    }
+
+    // Update round display
+    function updateRoundDisplay5() {
+      for (let i = 1; i <= 4; i++) {
+        const box = document.getElementById(`round5-${i}`);
+        box.className = i <= currentRound5 ? 'round-box5 completed5' : 'round-box5';
+      }
+    }
+  </script>
+</div>
+
+<style>
+  /* Responsive adjustments */
+  @media (max-width: 1050px) {
+    #mainHeader {
+      padding: 12px 15px;
+    }
+    #mainHeader > div {
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    #mainHeader nav ul {
+      gap: 10px;
+    }
+    #trackingStatus span:last-child {
+      display: none;
+    }
+    #mainHeader button {
+      padding: 6px 10px;
+      font-size: 14px;
+    }
+  }
+
+  @media (max-width: 1100px) {
+    #mainHeader {
+      padding: 12px 15px;
+    }
+    #mainHeader > div {
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+    #mainHeader nav ul {
+      gap: 5px;
+      font-size: 15.5px;
+    }
+    #trackingStatus span:last-child {
+      padding:2px;
+      font-size: 12px
+    }
+    #mainHeader button {
+      padding: 6px 10px;
+      font-size: 14px;
+    }
+  }
+
+  
+</style>
+</div>
+
+
+<!-- Scripts -->
+<script src="../EyeTracking/WebGazer/www/node_modules/sweetalert/dist/sweetalert.min.js"></script>
+<script src="../EyeTracking/WebGazer/www/js/main.js"></script>
+<script src="../EyeTracking/WebGazer/www/js/calibration.js"></script>
+<script src="../EyeTracking/WebGazer/www/js/precision_calculation.js"></script>
+<script src="../EyeTracking/WebGazer/www/js/precision_store_points.js"></script>
+<script src="../EyeTracking/WebGazer/www/js/resize_canvas.js"></script>
+<script src="../EyeTracking/WebGazer/www/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script> var exClick=false;
+</script>
+<!-- ✅ Logic Script -->
+
+</body>
+</html>
