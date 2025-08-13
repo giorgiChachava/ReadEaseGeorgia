@@ -1,7 +1,5 @@
 const eyeTrackingExercises = [
-
-  
-//'gaze-maze'
+'gaze-maze'
 ];
 
 let currentExerciseType = null;
