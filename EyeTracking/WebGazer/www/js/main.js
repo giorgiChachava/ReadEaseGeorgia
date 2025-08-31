@@ -73,7 +73,8 @@ const ExerciseGames = [
 'find-words-game',
 'odd-one-out-game',
 'focus-timer-game',
-'rapid-word-attack-game'
+'rapid-word-attack-game',
+'syllable-builder-game',
 ];
 
 function showSection(sectionId) {

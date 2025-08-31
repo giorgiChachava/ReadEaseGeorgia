@@ -602,7 +602,29 @@ body {line-height:1.6;}
       </div>
     </div>
 
-
+    <div  class="exercise-card" data-level="level3"
+    onclick="startExercise('syllable-builder')" id="emoji-word-finder"
+         style="background: white; border-radius: 12px; padding: 0; cursor: pointer; 
+                box-shadow: 0 2px 6px rgba(0,0,0,0.05); transition: all 0.2s; border: 1px solid #f0f4f8;"
+         onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)'" 
+         onmouseout="this.style.transform='none'; this.style.boxShadow='0 2px 6px rgba(0,0,0,0.05)'">
+      <div style="background: linear-gradient(135deg, #85a728, #2ecc71); height: 6px; border-radius: 12px 12px 0 0;"></div>
+      <div style="padding: 16px; display: flex; gap: 16px;">
+        <div style="background: #f0fdf4; color: #90a728; width: 48px; height: 48px; border-radius: 10px; display: grid; place-items: center; font-size: 22px; flex-shrink: 0;">🧩</div>
+        <div style="flex: 1;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h3 style="margin: 0 0 6px 0; color: #2c3e50; font-size: 17px; font-weight: 600;">Syllable Builder</h3>
+            <span style="background: #fee1c7; color: #92400e; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 500;">რთული</span>
+          </div>
+          <p style="margin: 0; color: #666; font-size: 14px; line-height: 1.5;">ააშენე ემოჯით მინიშებული სიტყვები, აირჩიე ისეთი მარცვალები რომლითაც მაგ სიტყვას ააწყობ.</p>
+          <div style="display: flex; gap: 8px; margin-top: 12px;">
+            <span style="background: #f3e8ff; color: #6f42c1; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 500;">სიტყვების ამოცნობა</span>
+            <span style="background: #f3e8ff; color: #6f42c1; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 500;">მარცვლები</span>
+            <span style="background: #f3e8ff; color: #4271c1; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 500;">სიტყვების აწყობა</span>
+          </div>
+        </div>
+      </div>
+    </div>
 
 
   </div>
@@ -2792,6 +2814,603 @@ body {line-height:1.6;}
         box.className = i <= currentRound5 ? 'round-box5 completed5' : 'round-box5';
       }
     }
+  </script>
+</div>
+
+<div id="syllable-builder-game" style="display:none; position: relative; width: 100%; height: 92vh; background: #f8fafc; overflow: hidden;">
+
+  <!-- Game Header with Level Indicator -->
+  <div style="background: #d97706; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center;">
+    <h2 style="color: white; margin: 0; font-size: 18px; font-weight: 500;">
+      <span style="margin-right: 10px;">🧩</span> 
+      Syllable Builder
+    </h2>
+    
+    <!-- Level Indicator -->
+    <div style="display: flex; gap: 8px; align-items: center;">
+      <div style="font-size: 14px; color: white; margin-right: 5px; font-weight: 500; margin-top: 3px;">Level</div>
+      <div id="level6-1" class="level-box-6 active-6">1</div>
+      <div id="level6-2" class="level-box-6">2</div>
+      <div id="level6-3" class="level-box-6">3</div>
+    </div>
+    
+    <div>
+      <button onclick="closeGame6()" style="background: none; color: white; border: 1px solid rgba(255,255,255,0.3); padding: 6px 12px; border-radius: 4px; font-size: 14px;">
+        უკან დაბრუნება
+      </button>
+    </div>
+  </div>
+
+  <!-- Start Screen -->
+  <div id="startScreen6" style="height: calc(100% - 54px); display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; text-align: center;">
+    <div style="max-width: 500px;">
+      <h3 style="color: #d97706; font-size: 24px; margin-bottom: 20px;">Syllable Building Challenge</h3>
+      <div style="background: white; border-radius: 12px; padding: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-bottom: 30px;">
+        <p style="color: #64748b; margin-bottom: 15px; line-height: 1.6;">
+          აშენე სიტყვები სილაბების დახმარებით.
+        </p>
+        <p style="color: #64748b; margin-bottom: 15px; line-height: 1.6;">
+          დააჭირე სილაბებს სწორი რიგით სიტყვის ასაშენებლად.
+        </p>
+        <p style="color: #64748b; line-height: 1.6;">
+          შემდეგ დონეზე გადასასვლელად, დაასრულე 4 რაუნდი.
+        </p>
+      </div>
+      <button onclick="startGame6()" style="background: #d97706; color: white; border: none; padding: 14px 40px; border-radius: 8px; font-size: 16px; font-weight: 500; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+        თამაშის დაწყება
+      </button>
+    </div>
+  </div>
+
+  <!-- Game Screen -->
+  <div id="gameScreen6" style="height: calc(100% - 54px); display: none; flex-direction: column;">
+    
+    <!-- Game Content -->
+    <div style="flex: 1; display: flex; flex-direction: column; padding: 20px; overflow-y: auto;">
+      
+      <!-- Target Image -->
+      <div style="text-align: center; margin-bottom: 30px;">
+        <div style="display: inline-block; background: #fed7aa; padding: 20px; border-radius: 20px;">
+          <div id="targetImage6" style="font-size: 80px; margin-bottom: 10px;">
+            <!-- Image will be inserted here -->
+          </div>
+          <div style="font-size: 14px; color: #d97706; font-weight: 500;">აშენე ეს სიტყვა!</div>
+        </div>
+      </div>
+
+      <!-- Building Area -->
+      <div style="text-align: center; margin-bottom: 30px;">
+        <div style="font-size: 14px; color: #d97706; margin-bottom: 10px; font-weight: 500;">შენი სიტყვა:</div>
+        <div id="buildingArea6" style="display: flex; justify-content: center; gap: 10px; min-height: 60px; align-items: center; background: white; padding: 15px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+          <!-- Selected syllables will appear here -->
+        </div>
+      </div>
+
+      <!-- Syllable Options -->
+      <div style="text-align: center; margin-bottom: 20px;">
+        <div style="font-size: 14px; color: #d97706; margin-bottom: 15px; font-weight: 500;">აირჩიე სილაბები:</div>
+        <div id="syllableOptions6" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; max-width: 600px; margin: 0 auto;">
+          <!-- Syllable options will be generated here -->
+        </div>
+      </div>
+
+      <!-- Check Button -->
+      <div id="checkButtonContainer6" style="display: none; text-align: center; margin-top: 20px;">
+        <button onclick="checkAnswers6()" style="background: #d97706; color: white; border: none; padding: 12px 30px; border-radius: 8px; font-size: 16px; font-weight: 500; cursor: pointer;">
+          პასუხის შემოწმება
+        </button>
+      </div>
+
+      <!-- Clear Button -->
+      <div style="text-align: center; margin-top: 10px;">
+        <button onclick="clearBuilding6()" style="background: #6b7280; color: white; border: none; padding: 8px 20px; border-radius: 6px; font-size: 14px; cursor: pointer;">
+          გასუფთავება
+        </button>
+      </div>
+    </div>
+
+    <!-- Round Progress -->
+    <div style="padding: 15px 20px; background: #edf2f7; border-top: 1px solid #e2e8f0; display: flex; justify-content: center; gap: 15px;">
+      <div id="round6-1" class="round-box-6"></div>
+      <div id="round6-2" class="round-box-6"></div>
+      <div id="round6-3" class="round-box-6"></div>
+      <div id="round6-4" class="round-box-6"></div>
+    </div>
+  </div>
+
+  <!-- Feedback Modal -->
+  <div id="feedbackModal6" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 25px; border-radius: 12px; box-shadow: 0 5px 25px rgba(0,0,0,0.1); text-align: center; max-width: 300px; width: 90%; z-index: 100;">
+    <div id="resultIcon6" style="width: 60px; height: 60px; background: #d97706; border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center;">
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20 6L9 17L4 12" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <h3 id="resultTitle6" style="color: #d97706; margin-bottom: 10px; font-size: 18px;">ყოჩაღ!</h3>
+    <p id="resultMessage6" style="color: #64748b; margin-bottom: 20px; font-size: 15px;">შენ სწორად აშენე სიტყვა!</p>
+    <button onclick="nextRound6()" style="background: #d97706; color: white; border: none; padding: 8px 20px; border-radius: 6px; font-size: 14px; cursor: pointer; width: 100%;">
+      გააგრძელე
+    </button>
+  </div>
+
+  <!-- Completion Reward Modal -->
+  <div id="completionModal6" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: linear-gradient(135deg, #fbbf24, #f59e0b); padding: 30px; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); text-align: center; max-width: 350px; width: 90%; z-index: 200;">
+    <div style="font-size: 60px; margin-bottom: 15px;">🏆</div>
+    <h3 style="color: white; margin-bottom: 15px; font-size: 22px; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">ბრავო!</h3>
+    <p style="color: white; margin-bottom: 20px; font-size: 16px; line-height: 1.5;">
+      შენ წარმატებით დაასრულე ყველა დონე!<br>
+      შენ ხარ ნამდვილი სილაბების ოსტატი! 🌟
+    </p>
+    <div style="background: rgba(255,255,255,0.2); padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+      <div style="color: white; font-size: 14px;">შენი მიღწევები:</div>
+      <div style="color: white; font-size: 18px; font-weight: bold; margin-top: 5px;">3 დონე ✓ | 24 რაუნდი ✓</div>
+    </div>
+    <button onclick="closeCompletionModal6()" style="background: white; color: #d97706; border: none; padding: 10px 25px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.2);">
+      მადლობა!
+    </button>
+  </div>
+
+  <style>
+    /* Level Boxes */
+    .level-box-6 {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 14px;
+      background: rgba(255,255,255,0.2);
+      color: white;
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+    
+    .level-box-6.active-6 {
+      background: white;
+      color: #d97706;
+      transform: scale(1.1);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .level-box-6:not(.active-6):hover {
+      background: rgba(255,255,255,0.3);
+      transform: scale(1.05);
+    }
+    
+    /* Round Boxes */
+    .round-box-6 {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      position: relative;
+    }
+    
+    .round-box-6.completed-6::after {
+      content: "✓";
+      color: #d97706;
+      font-size: 20px;
+      font-weight: bold;
+    }
+    
+    /* Syllable Cells */
+    .syllable-cell-6 {
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: white;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.2s;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      border: 2px solid transparent;
+      min-width: 50px;
+    }
+    
+    .syllable-cell-6:hover {
+      transform: scale(1.05);
+      border-color: #fed7aa;
+    }
+    
+    .syllable-cell-6.selected-6 {
+      background: #d97706;
+      color: white;
+      transform: scale(0.95);
+    }
+    
+    .syllable-cell-6.disabled-6 {
+      background: #e5e7eb;
+      color: #9ca3af;
+      cursor: not-allowed;
+    }
+    
+    .syllable-cell-6.disabled-6:hover {
+      transform: none;
+      border-color: transparent;
+    }
+    
+    /* Building area syllables */
+    .built-syllable-6 {
+      padding: 8px 12px;
+      background: #fed7aa;
+      color: #d97706;
+      border-radius: 6px;
+      font-weight: bold;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .built-syllable-6:hover {
+      background: #fdba74;
+      transform: scale(1.05);
+    }
+  </style>
+
+  <script>
+    // Game configuration with syllable-based words
+    const gameConfig6 = {
+      levels: {
+        1: { 
+          wordCount: 1,
+          variants: [
+            // Variant 1
+            [
+              { image: "🐱", word: "კატა", syllables: ["კა", "ტა"], distractors: ["მა", "ბა", "გა"] }
+            ],
+            // Variant 2
+            [
+              { image: "🐶", word: "ძაღლი", syllables: ["ძაღ", "ლი"], distractors: ["მაღ", "ზი", "კი"] }
+            ],
+            // Variant 3
+            [
+              { image: "🏠", word: "სახლი", syllables: ["საღ", "ლი"], distractors: ["გაღ", "რი", "ძი"] }
+            ],
+            // Variant 4
+            [
+              { image: "🌳", word: "ხეები", syllables: ["ხე", "ები"], distractors: ["ფე", "ამა", "ღა"] }
+            ]
+          ]
+        },
+        2: { 
+          wordCount: 2,
+          variants: [
+            // Variant 1
+            [
+              { image: "🍎", word: "ვაშლი", syllables: ["ვაშ", "ლი"], distractors: ["ღაშ", "ზი"] },
+              { image: "🌞", word: "მზე", syllables: ["მზე",], distractors: ["ღზე", "ო","ე"] }
+            ],
+            // Variant 2
+            [
+              { image: "📖", word: "წიგნი", syllables: ["წიგ", "ნი"], distractors: ["ბიგ", "მი"] },
+              { image: "🚪", word: "კარი", syllables: ["კა", "რი"], distractors: ["ღა", "ზი"] }
+            ],
+            // Variant 3
+            [
+              { image: "🥛", word: "რძე", syllables: ["რძე",], distractors: ["გ", "ფე","კა"] },
+              { image: "🌙", word: "მთვარე", syllables: ["მთვა", "რე"], distractors: ["ღთვა", "ზე"] }
+            ],
+            // Variant 4
+            [
+              { image: "🐦", word: "ჩიტი", syllables: ["ჩი", "ტი"], distractors: ["ღი", "ზი"] },
+              { image: "💧", word: "წყალი", syllables: ["წყა", "ლი"], distractors: ["ღყა", "ზი"] }
+            ]
+          ]
+        },
+        3: { 
+          wordCount: 3,
+          variants: [
+            // Variant 1
+            [
+              { image: "🚗", word: "მანქანა", syllables: ["მან", "ქა", "ნა"], distractors: ["გან", "ღა", "მა"] },
+              { image: "🦋", word: "პეპელა", syllables: ["პე", "პე", "ლა"], distractors: ["ღე", "ზე", "ღა"] },
+              { image: "🌸", word: "ყვავილი", syllables: ["ყვა", "ვი", "ლი"], distractors: ["ღვა", "ზი", "ღი"] }
+            ],
+            // Variant 2
+            [
+              { image: "🏫", word: "სკოლა", syllables: ["სკო","ლა"], distractors: ["გ", "ღო", "ღა"] },
+              { image: "🎈", word: "ბურთი", syllables: ["ბურ", "თი"], distractors: ["ღურ", "ზი"] },
+              { image: "🍌", word: "ბანანი", syllables: ["ბა", "ნა", "ნი"], distractors: ["ღა", "მა", "ზი"] }
+            ],
+            // Variant 3
+            [
+              { image: "🐘", word: "სპილო", syllables: ["სპი","ლო"], distractors: ["გ", "ღი", "ღო"] },
+              { image: "🌺", word: "ვარდი", syllables: ["ვარ", "დი"], distractors: ["ღარ", "ზი"] },
+              { image: "🚲", word: "ველო", syllables: ["ვე", "ლო"], distractors: ["ღე", "ღო"] }
+            ],
+            // Variant 4
+            [
+              { image: "🎨", word: "ფერადი", syllables: ["ფე", "რა", "დი"], distractors: ["ღე", "ღა", "ზი"] },
+              { image: "⭐", word: "ვარსკვლავი", syllables: ["ვარს", "კვლა", "ვი"], distractors: ["ღარს", "ღვლა", "ზი"] },
+              { image: "❄️", word: "ფიფქი", syllables: ["ფიფ", "ქი"], distractors: ["ღოვ", "ზი"] }
+            ]
+          ]
+        }
+      }
+    };
+    
+    // Game state
+    let currentLevel6 = 1;
+    let roundsCompleted6 = 0;
+    let currentWords6 = [];
+    let currentWordIndex6 = 0;
+    let builtSyllables6 = [];
+    let completedWords6 = 0;
+    let allLevelsCompleted6 = false;
+    
+    // Start the game
+    function startGame6() {
+      document.getElementById('startScreen6').style.display = 'none';
+      document.getElementById('gameScreen6').style.display = 'flex';
+      initRound6();
+    }
+    
+    // Initialize a new round
+    function initRound6() {
+      // Reset game state
+      builtSyllables6 = [];
+      completedWords6 = 0;
+      currentWordIndex6 = 0;
+      
+      // Get level configuration
+      const level = gameConfig6.levels[currentLevel6];
+      
+      // Get the variant for this round
+      const variantIndex = roundsCompleted6 % level.variants.length;
+      currentWords6 = [...level.variants[variantIndex]];
+      
+      // Start with first word
+      displayCurrentWord6();
+      
+      // Update UI
+      updateLevelDisplay6();
+      updateRoundDisplay6();
+      document.getElementById('checkButtonContainer6').style.display = 'none';
+    }
+    
+    // Display the current word to build
+    function displayCurrentWord6() {
+      if (currentWordIndex6 >= currentWords6.length) {
+        // All words completed
+        showFeedback6(true);
+        return;
+      }
+      
+      const currentWord = currentWords6[currentWordIndex6];
+      
+      // Display image
+      document.getElementById('targetImage6').textContent = currentWord.image;
+      
+      // Clear building area
+      document.getElementById('buildingArea6').innerHTML = '';
+      builtSyllables6 = [];
+      
+      // Generate syllable options (word syllables + distractors)
+      const allSyllables = [...currentWord.syllables, ...currentWord.distractors];
+      shuffleArray(allSyllables);
+      
+      const syllableContainer = document.getElementById('syllableOptions6');
+      syllableContainer.innerHTML = '';
+      
+      allSyllables.forEach((syllable, index) => {
+        const syllableDiv = document.createElement('div');
+        syllableDiv.className = 'syllable-cell-6';
+        syllableDiv.textContent = syllable;
+        syllableDiv.dataset.syllable = syllable;
+        syllableDiv.dataset.index = index;
+        
+        syllableDiv.addEventListener('click', () => selectSyllable6(syllableDiv, syllable));
+        
+        syllableContainer.appendChild(syllableDiv);
+      });
+      
+      document.getElementById('checkButtonContainer6').style.display = 'none';
+    }
+    
+    // Handle syllable selection
+    function selectSyllable6(cell, syllable) {
+      // If already selected, ignore
+      if (cell.classList.contains('disabled-6')) return;
+      
+      // Add to building area
+      builtSyllables6.push(syllable);
+      
+      // Disable the cell
+      cell.classList.add('disabled-6');
+      
+      // Update building area
+      updateBuildingArea6();
+      
+      // Show check button if we have syllables
+      document.getElementById('checkButtonContainer6').style.display = 
+        builtSyllables6.length > 0 ? 'block' : 'none';
+    }
+    
+    // Update the building area display
+    function updateBuildingArea6() {
+      const buildingArea = document.getElementById('buildingArea6');
+      buildingArea.innerHTML = '';
+      
+      builtSyllables6.forEach((syllable, index) => {
+        const syllableDiv = document.createElement('div');
+        syllableDiv.className = 'built-syllable-6';
+        syllableDiv.textContent = syllable;
+        syllableDiv.dataset.index = index;
+        
+        syllableDiv.addEventListener('click', () => removeSyllable6(index));
+        
+        buildingArea.appendChild(syllableDiv);
+      });
+    }
+    
+    // Remove a syllable from building area
+    function removeSyllable6(index) {
+      const syllable = builtSyllables6[index];
+      builtSyllables6.splice(index, 1);
+      
+      // Re-enable the syllable option
+      const syllableCells = document.querySelectorAll('.syllable-cell-6');
+      syllableCells.forEach(cell => {
+        if (cell.dataset.syllable === syllable && cell.classList.contains('disabled-6')) {
+          cell.classList.remove('disabled-6');
+          return;
+        }
+      });
+      
+      updateBuildingArea6();
+      
+      // Hide check button if no syllables
+      document.getElementById('checkButtonContainer6').style.display = 
+        builtSyllables6.length > 0 ? 'block' : 'none';
+    }
+    
+    // Check if built word is correct
+    function checkAnswers6() {
+      const currentWord = currentWords6[currentWordIndex6];
+      const builtWord = builtSyllables6.join('').toLowerCase();
+      const targetWord = currentWord.word.toLowerCase();
+      
+      if (builtWord === targetWord) {
+        // Correct! Move to next word
+        completedWords6++;
+        currentWordIndex6++;
+        
+        // Small delay before showing next word or completion
+        setTimeout(() => {
+          displayCurrentWord6();
+        }, 500);
+        
+      } else {
+        // Incorrect - show feedback
+        showFeedback6(false);
+      }
+    }
+    
+    // Clear building area
+    function clearBuilding6() {
+      // Re-enable all syllable options
+      const syllableCells = document.querySelectorAll('.syllable-cell-6');
+      syllableCells.forEach(cell => {
+        cell.classList.remove('disabled-6');
+      });
+      
+      // Clear building area
+      builtSyllables6 = [];
+      updateBuildingArea6();
+      document.getElementById('checkButtonContainer6').style.display = 'none';
+    }
+    
+    // Show feedback modal
+    function showFeedback6(isSuccess) {
+      if (isSuccess) {
+        document.getElementById('resultTitle6').textContent = "ყოჩაღ!";
+        document.getElementById('resultMessage6').textContent = `შენ სწორად აშენე ყველა სიტყვა!`;
+        document.getElementById('resultTitle6').style.color = "#d97706";
+        document.getElementById('resultIcon6').style.background = "#d97706";
+      } else {
+        document.getElementById('resultTitle6').textContent = "თავიდან სცადე!";
+        document.getElementById('resultMessage6').textContent = "ეს არ არის სწორი სიტყვა.";
+        document.getElementById('resultTitle6').style.color = "#f44336";
+        document.getElementById('resultIcon6').style.background = "#f44336";
+      }
+      document.getElementById('feedbackModal6').style.display = 'block';
+    }
+    
+    // Complete the current round
+    function completeRound6() {
+      roundsCompleted6++;
+      updateRoundDisplay6();
+      
+      if (roundsCompleted6 >= 4 && currentLevel6 < 3) {
+        roundsCompleted6 = 0;
+        currentLevel6++;
+        updateLevelDisplay6();
+      } else if (roundsCompleted6 >= 4 && currentLevel6 === 3) {
+        // All levels completed!
+        allLevelsCompleted6 = true;
+      }
+    }
+    
+    // Start next round
+    function nextRound6() {
+      document.getElementById('feedbackModal6').style.display = 'none';
+      
+      if (completedWords6 === currentWords6.length) {
+        // Round completed successfully
+        completeRound6();
+        
+        // Check if all levels are completed
+        if (allLevelsCompleted6) {
+          showCompletionReward6();
+        } else {
+          initRound6();
+        }
+      } else {
+        // Continue current round - try again or clear for retry
+        clearBuilding6();
+      }
+    }
+    
+    // Show completion reward
+    function showCompletionReward6() {
+      document.getElementById('completionModal6').style.display = 'block';
+    }
+    
+    // Close completion modal
+    function closeCompletionModal6() {
+      document.getElementById('completionModal6').style.display = 'none';
+      // Reset to start screen
+      document.getElementById('gameScreen6').style.display = 'none';
+      document.getElementById('startScreen6').style.display = 'flex';
+      // Reset all game state
+      currentLevel6 = 1;
+      roundsCompleted6 = 0;
+      allLevelsCompleted6 = false;
+    }
+    
+    // Update level display
+    function updateLevelDisplay6() {
+      for (let i = 1; i <= 3; i++) {
+        const box = document.getElementById(`level6-${i}`);
+        box.style.background = i === currentLevel6 ? 'white' : 'rgba(255,255,255,0.2)';
+        box.style.color = i === currentLevel6 ? '#d97706' : 'white';
+      }
+    }
+    
+    // Update round display
+    function updateRoundDisplay6() {
+      for (let i = 1; i <= 4; i++) {
+        const box = document.getElementById(`round6-${i}`);
+        box.className = i <= roundsCompleted6 ? 'round-box-6 completed-6' : 'round-box-6';
+      }
+    }
+    
+    // Close the game
+    function closeGame6() {
+      document.getElementById('syllable-builder-game').style.display = 'none';
+      // Reset game state
+      currentLevel6 = 1;
+      roundsCompleted6 = 0;
+      allLevelsCompleted6 = false;
+    }
+    
+    // Utility function to shuffle array
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+    
   </script>
 </div>
 
