@@ -9,11 +9,32 @@ window.onload = async function() {
         })
         .saveDataAcrossSessions(true)
         //.begin();
+
+        ///////////////BELOW THIS IS ADDED BY GIORGI CHACHAVA - HANDLES CALIBRATION START BUTTON (BELOW THIS LINE IS ALL MY CODE)
         document.getElementById('startCalibrationBox').addEventListener('click', () => {
-        webgazer.begin();
-        startCalibration(); // your existing calibration function
-        
+    // Add loading state
+    const button = document.getElementById('startCalibrationBox');
+    button.innerHTML = '⏳ იტვირთება...';
+    button.disabled = true;
+    
+    webgazer.begin()
+        .then(() => {
+            // Camera access granted
+            console.log('WebGazer started successfully');
+            startCalibration();
+            button.style.display = 'none'; // Hide button after success
+        })
+        .catch((err) => {
+            // Camera access denied or other error
+            console.error('WebGazer failed to start:', err);
+            button.innerHTML = '❌ კამერის ნებართვა საჭიროა';
+            button.disabled = false;
+            
+            // Show helpful message
+            alert('კამერის წვდომა საჭიროა თვალის ტრეკინგისთვის. გთხოვთ, განაახლოთ გვერდი და დაუშვათ კამერის გამოყენება.');
+        });
 });
+     ///////////////////////ABOVE THIS IS ADDED BY GIORGI CHACHAVA
         webgazer.showVideoPreview(true) /* shows all video previews */
             .showPredictionPoints(true) /* shows a square every 100 milliseconds where current prediction is */
             .applyKalmanFilter(true); /* Kalman Filter defaults to on. Can be toggled by user. */
