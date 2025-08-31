@@ -3073,11 +3073,11 @@ body {line-height:1.6;}
             ],
             // Variant 3
             [
-              { image: "🏠", word: "სახლი", syllables: ["საღ", "ლი"], distractors: ["გაღ", "რი", "ძი"] }
+              { image: "🏠", word: "სახლი", syllables: ["სახ", "ლი"], distractors: ["გაღ", "რი", "ძი"] }
             ],
             // Variant 4
             [
-              { image: "🌳", word: "ხეები", syllables: ["ხე", "ები"], distractors: ["ფე", "ამა", "ღა"] }
+              { image: "🌳", word: "ხე", syllables: ["ხე",], distractors: ["ები","ფე", "ამა", "ღა"] }
             ]
           ]
         },
@@ -3129,8 +3129,8 @@ body {line-height:1.6;}
             ],
             // Variant 4
             [
-              { image: "🎨", word: "ფერადი", syllables: ["ფე", "რა", "დი"], distractors: ["ღე", "ღა", "ზი"] },
-              { image: "⭐", word: "ვარსკვლავი", syllables: ["ვარს", "კვლა", "ვი"], distractors: ["ღარს", "ღვლა", "ზი"] },
+              { image: "🍎", word: "ვაშლი", syllables: ["ვაშ", "ლი"], distractors: ["ღაშ", "ზი"] },
+              { image: "⭐", word: "ვარსკვლავი", syllables: ["ვარ", "სკვლა", "ვი"], distractors: ["ღარს", "ღვლა", "ზი"] },
               { image: "❄️", word: "ფიფქი", syllables: ["ფიფ", "ქი"], distractors: ["ღოვ", "ზი"] }
             ]
           ]
@@ -3371,6 +3371,7 @@ body {line-height:1.6;}
       // Reset to start screen
       document.getElementById('gameScreen6').style.display = 'none';
       document.getElementById('startScreen6').style.display = 'flex';
+      document.getElementById('exercisesSection').style.display = 'block';
       // Reset all game state
       currentLevel6 = 1;
       roundsCompleted6 = 0;
@@ -3397,6 +3398,8 @@ body {line-height:1.6;}
     // Close the game
     function closeGame6() {
       document.getElementById('syllable-builder-game').style.display = 'none';
+      document.getElementById('gaze-maze-game').style.display = 'none';
+      document.getElementById('exercisesSection').style.display = 'block';
       // Reset game state
       currentLevel6 = 1;
       roundsCompleted6 = 0;
