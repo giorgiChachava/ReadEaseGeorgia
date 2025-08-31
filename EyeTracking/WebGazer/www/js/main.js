@@ -66,6 +66,7 @@ function RestartForCalibrationButton(){
   }
 }
 ////////////////////////////////////////////////////UPDATE THIS///////////////////////////////
+// Added by giorgi chachava - just added function to handle section display and exercise filtering (below this line is all my code)
 const ExerciseGames = [
 'letter-mastery-game',
 'emoji-word-finder-game',

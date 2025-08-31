@@ -160,6 +160,8 @@ function ShowCalibrationPoint() {
 /**
 * This function clears the calibration buttons memory
 */
+
+// Added by giorgi chachava - just added functions for calibration clearence. (below this line is all my code)
 function ClearCalibration(){
   // Clear data from WebGazer
 
