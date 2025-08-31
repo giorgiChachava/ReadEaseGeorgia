@@ -542,7 +542,7 @@ body {line-height:1.6;}
         <div style="flex: 1;">
           <div style="display: flex; justify-content: space-between; align-items: center;">
             <h3 style="margin: 0 0 6px 0; color: #2c3e50; font-size: 17px; font-weight: 600;">Gaze Maze</h3>
-            <span style="background: #fef3c7; color: #92400e; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 500;">Medium</span>
+            <span style="background: #fef3c7; color: #92400e; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 500;">საშუალო</span>
           </div>
           <p style="margin: 0; color: #666; font-size: 14px; line-height: 1.5;">გააყოლე თვალი ბურთს, რაც გააუმჯობესებს კონტროლს და შეამცირებს არასტაბილურ კითხვის მოძრაობებს.</p>
           <div style="display: flex; gap: 8px; margin-top: 12px;">
@@ -601,9 +601,9 @@ body {line-height:1.6;}
         </div>
       </div>
     </div>
-
+    <!-- 6. Syllable Builder -->
     <div  class="exercise-card" data-level="level3"
-    onclick="startExercise('syllable-builder')" id="emoji-word-finder"
+    onclick="startExercise('syllable-builder')" id="syllable-builder"
          style="background: white; border-radius: 12px; padding: 0; cursor: pointer; 
                 box-shadow: 0 2px 6px rgba(0,0,0,0.05); transition: all 0.2s; border: 1px solid #f0f4f8;"
          onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)'" 
@@ -625,7 +625,36 @@ body {line-height:1.6;}
         </div>
       </div>
     </div>
-
+    <!-- 7. Letter Order -->
+    <div class="exercise-card" data-level="level1" 
+     onclick="startExercise('letter-order')" id="letter-order"
+     style="background: white; border-radius: 12px; padding: 0; cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05); transition: all 0.2s; border: 1px solid #f0f4f8;"
+     onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)'" 
+     onmouseout="this.style.transform='none'; this.style.boxShadow='0 2px 6px rgba(0,0,0,0.05)'">
+  
+  <div style="background: linear-gradient(135deg, #059669, #10b981); height: 6px; border-radius: 12px 12px 0 0;"></div>
+  
+  <div style="padding: 16px; display: flex; gap: 16px;">
+    <div style="background: #ecfdf5; color: #059669; width: 48px; height: 48px; border-radius: 10px; display: grid; place-items: center; font-size: 22px; flex-shrink: 0;">🔤</div>
+    
+    <div style="flex: 1;">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="margin: 0 0 6px 0; color: #2c3e50; font-size: 17px; font-weight: 600;">Letter Order</h3>
+        <span style="background: #ecfdf5; color: #059669; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 500;">მარტივი</span>
+      </div>
+      
+      <p style="margin: 0; color: #666; font-size: 14px; line-height: 1.5;">
+        აირჩიე ასოები სწორი თანმიმდევრობით, რათა შექმნა ნაჩვენები სიტყვა
+      </p>
+      
+      <div style="display: flex; gap: 8px; margin-top: 12px;">
+        <span style="background: #d1fae5; color: #065f46; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 500;">ასოების დალაგება</span>
+        <span style="background: #f0fdf4; color: #166534; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 500;">ფონეტიკა</span>
+      </div>
+    </div>
+  </div>
+</div>
 
   </div>
 </div>
@@ -3417,6 +3446,560 @@ body {line-height:1.6;}
   </script>
 </div>
 
+<div id="letter-order-game" style="display: none; position: relative; width: 100%; height: 92vh; background: #f8fafc; overflow: hidden;">
+
+  <!-- Game Header with Level Indicator -->
+  <div style="background: #059669; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center;">
+    <h2 style="color: white; margin: 0; font-size: 18px; font-weight: 500;">
+      <span style="margin-right: 10px;">🔤</span> 
+      Letter Order Challenge
+    </h2>
+    
+    <!-- Level Indicator -->
+    <div style="display: flex; gap: 8px; align-items: center;">
+      <div style="font-size: 14px; color: white; margin-right: 5px; font-weight: 500; margin-top: 3px;">Level</div>
+      <div id="level-ls-1" class="level-box-ls active-ls">1</div>
+      <div id="level-ls-2" class="level-box-ls">2</div>
+      <div id="level-ls-3" class="level-box-ls">3</div>
+    </div>
+    
+    <div>
+      <button onclick="closeLetterSequenceGame()" style="background: none; color: white; border: 1px solid rgba(255,255,255,0.3); padding: 6px 12px; border-radius: 4px; font-size: 14px;">
+        უკან დაბრუნება
+      </button>
+    </div>
+  </div>
+
+  <!-- Start Screen -->
+  <div id="startScreenLS" style="height: calc(100% - 54px); display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; text-align: center;">
+    <div style="max-width: 500px;">
+      <h3 style="color: #059669; font-size: 24px; margin-bottom: 20px;">Letter Sequence Builder</h3>
+      <div style="background: white; border-radius: 12px; padding: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-bottom: 30px;">
+        <p style="color: #64748b; margin-bottom: 15px; line-height: 1.6;">
+          დაალაგე ასოები სწორი რიგით და ააგე სიტყვა.
+        </p>
+        <p style="color: #64748b; margin-bottom: 15px; line-height: 1.6;">
+          დონე 1: 3-4 ასოიანი სიტყვები<br>
+          დონე 2: 4-5 ასოიანი სიტყვები<br>
+          დონე 3: 5-6 ასოიანი სიტყვები
+        </p>
+        <p style="color: #64748b; line-height: 1.6;">
+          შემდეგ დონეზე გადასასვლელად, დაასრულე 4 რაუნდი.
+        </p>
+      </div>
+      <button onclick="startLetterSequenceGame()" style="background: #059669; color: white; border: none; padding: 14px 40px; border-radius: 8px; font-size: 16px; font-weight: 500; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+        თამაშის დაწყება
+      </button>
+    </div>
+  </div>
+
+  <!-- Game Screen -->
+  <div id="gameScreenLS" style="height: calc(100% - 54px); display: none; flex-direction: column;">
+    
+    <!-- Game Content -->
+    <div style="flex: 1; display: flex; flex-direction: column; padding: 20px; overflow-y: auto;">
+      
+      <!-- Target Image -->
+      <div style="text-align: center; margin-bottom: 30px;">
+        <div style="display: inline-block; background: #a7f3d0; padding: 20px; border-radius: 20px;">
+          <div id="targetImageLS" style="font-size: 80px; margin-bottom: 10px;">
+            <!-- Image will be inserted here -->
+          </div>
+          <div style="font-size: 14px; color: #059669; font-weight: 500;">დაალაგე ასოები!</div>
+        </div>
+      </div>
+
+      <!-- Building Area -->
+      <div style="text-align: center; margin-bottom: 30px;">
+        <div style="font-size: 14px; color: #059669; margin-bottom: 10px; font-weight: 500;">შენი სიტყვა:</div>
+        <div id="buildingAreaLS" style="display: flex; justify-content: center; gap: 8px; min-height: 60px; align-items: center; background: white; padding: 15px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+          <!-- Selected letters will appear here -->
+        </div>
+      </div>
+
+      <!-- Letter Options -->
+      <div style="text-align: center; margin-bottom: 20px;">
+        <div style="font-size: 14px; color: #059669; margin-bottom: 15px; font-weight: 500;">აირჩიე ასოები:</div>
+        <div id="letterOptionsLS" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; max-width: 600px; margin: 0 auto;">
+          <!-- Letter options will be generated here -->
+        </div>
+      </div>
+
+      <!-- Check Button -->
+      <div id="checkButtonContainerLS" style="display: none; text-align: center; margin-top: 20px;">
+        <button onclick="checkAnswersLS()" style="background: #059669; color: white; border: none; padding: 12px 30px; border-radius: 8px; font-size: 16px; font-weight: 500; cursor: pointer;">
+          პასუხის შემოწმება
+        </button>
+      </div>
+
+      <!-- Clear Button -->
+      <div style="text-align: center; margin-top: 10px;">
+        <button onclick="clearBuildingLS()" style="background: #6b7280; color: white; border: none; padding: 8px 20px; border-radius: 6px; font-size: 14px; cursor: pointer;">
+          გასუფთავება
+        </button>
+      </div>
+    </div>
+
+    <!-- Round Progress -->
+    <div style="padding: 15px 20px; background: #edf2f7; border-top: 1px solid #e2e8f0; display: flex; justify-content: center; gap: 15px;">
+      <div id="roundLS-1" class="round-box-ls"></div>
+      <div id="roundLS-2" class="round-box-ls"></div>
+      <div id="roundLS-3" class="round-box-ls"></div>
+      <div id="roundLS-4" class="round-box-ls"></div>
+    </div>
+  </div>
+
+  <!-- Feedback Modal -->
+  <div id="feedbackModalLS" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 25px; border-radius: 12px; box-shadow: 0 5px 25px rgba(0,0,0,0.1); text-align: center; max-width: 300px; width: 90%; z-index: 100;">
+    <div id="resultIconLS" style="width: 60px; height: 60px; background: #059669; border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center;">
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20 6L9 17L4 12" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <h3 id="resultTitleLS" style="color: #059669; margin-bottom: 10px; font-size: 18px;">ყოჩაღ!</h3>
+    <p id="resultMessageLS" style="color: #64748b; margin-bottom: 20px; font-size: 15px;">შენ სწორად დაალაგე ასოები!</p>
+    <button onclick="nextRoundLS()" style="background: #059669; color: white; border: none; padding: 8px 20px; border-radius: 6px; font-size: 14px; cursor: pointer; width: 100%;">
+      გაგრძელება
+    </button>
+  </div>
+
+  <!-- Completion Reward Modal -->
+  <div id="completionModalLS" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: linear-gradient(135deg, #10b981, #059669); padding: 30px; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); text-align: center; max-width: 350px; width: 90%; z-index: 200;">
+    <div style="font-size: 60px; margin-bottom: 15px;">🏆</div>
+    <h3 style="color: white; margin-bottom: 15px; font-size: 22px; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">ბრავო!</h3>
+    <p style="color: white; margin-bottom: 20px; font-size: 16px; line-height: 1.5;">
+      შენ წარმატებით დაასრულე ყველა დონე!<br>
+      შენ ხარ ნამდვილი ასოების ოსტატი! 🌟
+    </p>
+    <div style="background: rgba(255,255,255,0.2); padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+      <div style="color: white; font-size: 14px;">შენი მიღწევები:</div>
+      <div style="color: white; font-size: 18px; font-weight: bold; margin-top: 5px;">3 დონე ✓ | 12 რაუნდი ✓</div>
+    </div>
+    <button onclick="closeCompletionModalLS()" style="background: white; color: #059669; border: none; padding: 10px 25px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.2);">
+      მადლობა!
+    </button>
+  </div>
+
+  <style>
+    /* Level Boxes */
+    .level-box-ls {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 14px;
+      background: rgba(255,255,255,0.2);
+      color: white;
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+    
+    .level-box-ls.active-ls {
+      background: white;
+      color: #059669;
+      transform: scale(1.1);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .level-box-ls:not(.active-ls):hover {
+      background: rgba(255,255,255,0.3);
+      transform: scale(1.05);
+    }
+    
+    /* Round Boxes */
+    .round-box-ls {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      position: relative;
+    }
+    
+    .round-box-ls.completed-ls::after {
+      content: "✓";
+      color: #059669;
+      font-size: 20px;
+      font-weight: bold;
+    }
+    
+    /* Letter Cells */
+    .letter-cell-ls {
+      width: 45px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: white;
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.2s;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      border: 2px solid transparent;
+    }
+    
+    .letter-cell-ls:hover {
+      transform: scale(1.05);
+      border-color: #a7f3d0;
+    }
+    
+    .letter-cell-ls.disabled-ls {
+      background: #e5e7eb;
+      color: #9ca3af;
+      cursor: not-allowed;
+    }
+    
+    .letter-cell-ls.disabled-ls:hover {
+      transform: none;
+      border-color: transparent;
+    }
+    
+    /* Building area letters */
+    .built-letter-ls {
+      width: 40px;
+      height: 45px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #a7f3d0;
+      color: #059669;
+      border-radius: 6px;
+      font-weight: bold;
+      font-size: 18px;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 2px solid #059669;
+    }
+    
+    .built-letter-ls:hover {
+      background: #6ee7b7;
+      transform: scale(1.05);
+    }
+    
+    /* Animation for correct sequence */
+    .correct-animation {
+      animation: correctBounce 0.6s ease-in-out;
+    }
+    
+    @keyframes correctBounce {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+  </style>
+
+  <script>
+    // Game configuration
+    const gameConfigLS = {
+      levels: {
+        1: { 
+          words: [
+            { image: "🐱", word: "კატა", scrambled: ["ტ", "კ", "ა", "ა"] },
+            { image: "🌞", word: "მზე", scrambled: ["ე", "მ", "ზ"] },
+            { image: "🏠", word: "სახლი", scrambled: ["ს", "ლ", "ა", "ხ", "ი"] },
+            { image: "💧", word: "წყალი", scrambled: ["ყ", "წ", "ლ", "ა", "ი"] },
+            { image: "🌳", word: "ხე", scrambled: ["ე", "ხ"] },
+            { image: "🐶", word: "ძაღლი", scrambled: ["ღ", "ძ", "ლ", "ა", "ი"] },
+            { image: "📖", word: "წიგნი", scrambled: ["წ", "ნ", "ი", "გ", "ი"] },
+            { image: "🌙", word: "მთვარე", scrambled: ["მ", "ვ", "ე", "თ", "ა", "რ"] }
+          ]
+        },
+        2: { 
+          words: [
+            { image: "🚗", word: "მანქანა", scrambled: ["ქ", "მ", "ნ", "ა", "ა", "ნ"] },
+            { image: "🦋", word: "პეპელა", scrambled: ["პ", "ლ", "ე", "ა", "ე", "პ"] },
+            { image: "🍎", word: "ვაშლი", scrambled: ["შ", "ვ", "ი", "ა", "ლ"] },
+            { image: "🐦", word: "ჩიტი", scrambled: ["ტ", "ჩ", "ი", "ი"] },
+            { image: "🌸", word: "ყვავილი", scrambled: ["ყ", "ი", "ვ", "ლ", "ვ", "ა", "ი"] },
+            { image: "🚪", word: "კარი", scrambled: ["კ", "რ", "ა", "ი"] },
+            { image: "🎈", word: "ბურთი", scrambled: ["ბ", "თ", "რ", "უ", "ი"] },
+            { image: "🍌", word: "ბანანი", scrambled: ["ბ", "ნ", "ა", "ა", "ნ", "ი"] }
+          ]
+        },
+        3: { 
+          words: [
+            { image: "🏫", word: "სკოლა", scrambled: ["ს", "ო", "კ", "ლ", "ა"] },
+            { image: "🐘", word: "სპილო", scrambled: ["ს", "ო", "პ", "ლ", "ი"] },
+            { image: "🌺", word: "ვარდი", scrambled: ["ვ", "დ", "ა", "რ", "ი"] },
+            { image: "🚲", word: "ველო", scrambled: ["ვ", "ო", "ე", "ლ"] },
+            { image: "⭐", word: "ვარსკვლავი", scrambled: ["ვ", "რ", "კ", "ლ", "ა", "ს", "ვ", "ა", "ვ", "ი"] },
+            { image: "🕊️", word: "მტრედი", scrambled: ["მ", "რ", "ტ", "ე", "დ", "ი"] },
+            { image: "❄️", word: "ფიფქი", scrambled: ["ფ", "ი", "ქ", "ფ", "ი"] },
+            { image: "🦋", word: "თოვლი", scrambled: ["თ", "ლ", "ო", "ვ", "ი"] }
+          ]
+        }
+      }
+    };
+    
+    // Game state
+    let currentLevelLS = 1;
+    let roundsCompletedLS = 0;
+    let currentWordLS = null;
+    let builtLettersLS = [];
+    let availableLettersLS = [];
+    
+    // Start the game
+    function startLetterSequenceGame() {
+      document.getElementById('startScreenLS').style.display = 'none';
+      document.getElementById('gameScreenLS').style.display = 'flex';
+      initRoundLS();
+    }
+    
+    // Initialize a new round
+    function initRoundLS() {
+      // Reset game state
+      builtLettersLS = [];
+      
+      // Get level configuration
+      const level = gameConfigLS.levels[currentLevelLS];
+      
+      // Select random word for this round
+      currentWordLS = level.words[Math.floor(Math.random() * level.words.length)];
+      
+      // Set up available letters (scrambled)
+      availableLettersLS = [...currentWordLS.scrambled];
+      shuffleArray(availableLettersLS);
+      
+      // Display the word
+      displayCurrentWordLS();
+      
+      // Update UI
+      updateLevelDisplayLS();
+      updateRoundDisplayLS();
+      document.getElementById('checkButtonContainerLS').style.display = 'none';
+    }
+    
+    // Display the current word to build
+    function displayCurrentWordLS() {
+      // Display image
+      document.getElementById('targetImageLS').textContent = currentWordLS.image;
+      
+      // Clear building area
+      document.getElementById('buildingAreaLS').innerHTML = '';
+      builtLettersLS = [];
+      
+      // Generate letter options
+      const letterContainer = document.getElementById('letterOptionsLS');
+      letterContainer.innerHTML = '';
+      
+      availableLettersLS.forEach((letter, index) => {
+        const letterDiv = document.createElement('div');
+        letterDiv.className = 'letter-cell-ls';
+        letterDiv.textContent = letter;
+        letterDiv.dataset.letter = letter;
+        letterDiv.dataset.index = index;
+        
+        letterDiv.addEventListener('click', () => selectLetterLS(letterDiv, letter, index));
+        
+        letterContainer.appendChild(letterDiv);
+      });
+    }
+    
+    // Handle letter selection
+    function selectLetterLS(cell, letter, index) {
+      // If already disabled, ignore
+      if (cell.classList.contains('disabled-ls')) return;
+      
+      // Add to building area
+      builtLettersLS.push({letter, originalIndex: index});
+      
+      // Disable the cell
+      cell.classList.add('disabled-ls');
+      
+      // Update building area
+      updateBuildingAreaLS();
+      
+      // Show check button if we have letters
+      document.getElementById('checkButtonContainerLS').style.display = 
+        builtLettersLS.length > 0 ? 'block' : 'none';
+    }
+    
+    // Update the building area display
+    function updateBuildingAreaLS() {
+      const buildingArea = document.getElementById('buildingAreaLS');
+      buildingArea.innerHTML = '';
+      
+      builtLettersLS.forEach((letterData, index) => {
+        const letterDiv = document.createElement('div');
+        letterDiv.className = 'built-letter-ls';
+        letterDiv.textContent = letterData.letter;
+        letterDiv.dataset.index = index;
+        
+        letterDiv.addEventListener('click', () => removeLetterLS(index));
+        
+        buildingArea.appendChild(letterDiv);
+      });
+    }
+    
+    // Remove a letter from building area
+    function removeLetterLS(index) {
+      const letterData = builtLettersLS[index];
+      builtLettersLS.splice(index, 1);
+      
+      // Re-enable the letter option
+      const letterCells = document.querySelectorAll('.letter-cell-ls');
+      letterCells[letterData.originalIndex].classList.remove('disabled-ls');
+      
+      updateBuildingAreaLS();
+      
+      // Hide check button if no letters
+      document.getElementById('checkButtonContainerLS').style.display = 
+        builtLettersLS.length > 0 ? 'block' : 'none';
+    }
+    
+    // Check if built word is correct
+    function checkAnswersLS() {
+      const builtWord = builtLettersLS.map(data => data.letter).join('').toLowerCase();
+      const targetWord = currentWordLS.word.toLowerCase();
+      
+      if (builtWord === targetWord) {
+        // Correct! Add animation
+        const buildingArea = document.getElementById('buildingAreaLS');
+        buildingArea.classList.add('correct-animation');
+        
+        setTimeout(() => {
+          buildingArea.classList.remove('correct-animation');
+          showFeedbackLS(true);
+        }, 600);
+        
+      } else {
+        // Incorrect - show feedback
+        showFeedbackLS(false);
+      }
+    }
+    
+    // Clear building area
+    function clearBuildingLS() {
+      // Re-enable all letter options
+      const letterCells = document.querySelectorAll('.letter-cell-ls');
+      letterCells.forEach(cell => {
+        cell.classList.remove('disabled-ls');
+      });
+      
+      // Clear building area
+      builtLettersLS = [];
+      updateBuildingAreaLS();
+      document.getElementById('checkButtonContainerLS').style.display = 'none';
+    }
+    
+    // Show feedback modal
+    function showFeedbackLS(isSuccess) {
+      if (isSuccess) {
+        document.getElementById('resultTitleLS').textContent = "ყოჩაღ!";
+        document.getElementById('resultMessageLS').textContent = `შენ სწორად დაალაგე ასოები!`;
+        document.getElementById('resultTitleLS').style.color = "#059669";
+        document.getElementById('resultIconLS').style.background = "#059669";
+      } else {
+        document.getElementById('resultTitleLS').textContent = "თავიდან სცადე!";
+        document.getElementById('resultMessageLS').textContent = "ასოები არ არის სწორი რიგით.";
+        document.getElementById('resultTitleLS').style.color = "#f44336";
+        document.getElementById('resultIconLS').style.background = "#f44336";
+      }
+      document.getElementById('feedbackModalLS').style.display = 'block';
+    }
+    
+    // Complete the current round
+    function completeRoundLS() {
+      roundsCompletedLS++;
+      updateRoundDisplayLS();
+      
+      if (roundsCompletedLS >= 4 && currentLevelLS < 3) {
+        roundsCompletedLS = 0;
+        currentLevelLS++;
+        updateLevelDisplayLS();
+      } else if (roundsCompletedLS >= 4 && currentLevelLS === 3) {
+        // All levels completed!
+        showCompletionRewardLS();
+        return;
+      }
+    }
+    
+    // Start next round
+    function nextRoundLS() {
+      document.getElementById('feedbackModalLS').style.display = 'none';
+      
+      // Check if the last attempt was successful
+      const lastResultTitle = document.getElementById('resultTitleLS').textContent;
+      if (lastResultTitle === "ყოჩაღ!") {
+        // Only advance if successful
+        completeRoundLS();
+        initRoundLS();
+      } else {
+        // If incorrect, stay on same word - just clear and try again
+        clearBuildingLS();
+      }
+    }
+    
+    // Show completion reward
+    function showCompletionRewardLS() {
+      document.getElementById('completionModalLS').style.display = 'block';
+    }
+    
+    // Close completion modal
+    function closeCompletionModalLS() {
+      document.getElementById('completionModalLS').style.display = 'none';
+      // Reset to start screen
+      document.getElementById('gameScreenLS').style.display = 'none';
+      document.getElementById('startScreenLS').style.display = 'flex';
+      // Reset all game state
+      currentLevelLS = 1;
+      roundsCompletedLS = 0;
+    }
+    
+    // Update level display
+    function updateLevelDisplayLS() {
+      for (let i = 1; i <= 3; i++) {
+        const box = document.getElementById(`level-ls-${i}`);
+        if (box) {
+          box.classList.toggle('active-ls', i === currentLevelLS);
+        }
+      }
+    }
+    
+    // Update round display
+    function updateRoundDisplayLS() {
+      for (let i = 1; i <= 4; i++) {
+        const box = document.getElementById(`roundLS-${i}`);
+        if (box) {
+          box.className = i <= roundsCompletedLS ? 'round-box-ls completed-ls' : 'round-box-ls';
+        }
+      }
+    }
+    
+    // Close the game
+    function closeLetterSequenceGame() {
+      document.getElementById('gaze-maze-game').style.display = 'none';
+      document.getElementById('exercisesSection').style.display = 'block';
+      document.getElementById('letter-order-game').style.display = 'none';
+      // Reset game state
+      currentLevelLS = 1;
+      roundsCompletedLS = 0;
+    }
+    
+    // Utility function to shuffle array
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+    
+    // Initialize the game when DOM is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+      updateLevelDisplayLS();
+      updateRoundDisplayLS();
+    });
+  </script>
+</div>
+
 <style>
   /* Responsive adjustments */
   @media (max-width: 1050px) {
@@ -3460,8 +4043,6 @@ body {line-height:1.6;}
       font-size: 14px;
     }
   }
-
-  
 </style>
 </div>
 

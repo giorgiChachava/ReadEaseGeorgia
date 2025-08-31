@@ -75,6 +75,7 @@ const ExerciseGames = [
 'focus-timer-game',
 'rapid-word-attack-game',
 'syllable-builder-game',
+'letter-order-game',
 ];
 
 function showSection(sectionId) {
