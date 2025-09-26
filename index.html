@@ -25,7 +25,7 @@
 <div id="introSection" style="padding: 50px 20px; text-align: center; background-color: #f7f9fc; border-bottom: 2px solid #e0e6ed; font-family: 'Arial', sans-serif; line-height: 1.6;">
   <div style="max-width: 800px; margin: 0 auto;">
     <h1 style="font-size: 42px; font-weight: 800; color: #2c3e50; margin-bottom: 15px; line-height: 1.2;">
-      უკეთ წაიკითხე, იყავი ცონტენტრირებული
+      უკეთ წაიკითხე, იყავი კონტენტრირებული
     </h1>
     <p style="font-size: 20px; color: #4a6fa5; font-weight: 500; margin-bottom: 30px;">
       დახმარება დისლექსიისა და ყურადღების პრობლემებისთვის
@@ -206,62 +206,242 @@
 
 <!-- MAIN THINGIIES------------------------------>
 <div id="main" style = "display: none;">
-    <header id="mainHeader" style="background-color: #2c3e50; color: white; padding: 0px 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000; font-family: 'Arial', sans-serif;">
-  <div style="display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; height: 8vh;">
-    
+    <header id="mainHeader">
+  <div>
     <!-- Logo and Site Name -->
-    <div style="display: flex; align-items: center; gap: 15px;">
-      <div style="background-color: #4a6fa5; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-        <span style="font-size: 20px;">📖</span>
+    <div class="logo-container">
+      <div class="logo-icon">
+        <span>📖</span>
       </div>
-      <h1 style="margin: 0; font-size: 22px; font-weight: 700;">
-        <a href="/" style="color: white; text-decoration: none;">ReadEase</a>
+      <h1>
+        <a href="/">ReadEase</a>
       </h1>
     </div>
 
     <!-- Main Navigation -->
     <nav aria-label="Primary navigation">
-      <ul style="display: flex; list-style: none; margin: 0; padding: 0; gap: 25px;">
+      <ul>
         <li>
-          <a onclick="showSection('toolsSection'); hideExercises()" style="color: white; text-decoration: none; font-weight: 600; padding: 8px 12px; border-radius: 4px; transition: background-color 0.2s;" 
-             onmouseover="this.style.backgroundColor='#4a6fa5'" onmouseout="this.style.backgroundColor='transparent'">
-            ხელსაწყოები
-          </a>
+          <a onclick="showSection('toolsSection'); hideExercises()">ხელსაწყოები</a>
         </li>
         <li>
-          <a onclick="showSection('exercisesSection'); hideExercises()" style="color: white; text-decoration: none; font-weight: 600; padding: 8px 12px; border-radius: 4px; transition: background-color 0.2s;"
-             onmouseover="this.style.backgroundColor='#4a6fa5'" onmouseout="this.style.backgroundColor='transparent'">
-            სავარჯიშოები
-          </a>
+          <a onclick="showSection('exercisesSection'); hideExercises()">სავარჯიშოები</a>
         </li>
         <li>
-          <a onclick="showSection('aboutSection'); hidehideExercises()" style="color: white; text-decoration: none; font-weight: 600; padding: 8px 12px; border-radius: 4px; transition: background-color 0.2s;"
-             onmouseover="this.style.backgroundColor='#4a6fa5'" onmouseout="this.style.backgroundColor='transparent'">
-            ჩვენ შესახებ
-          </a>
+          <a onclick="showSection('aboutSection'); hideExercises()">ჩვენ შესახებ</a>
         </li>
       </ul>
     </nav>
 
     <!-- User Controls -->
-    <div style="display: flex; align-items: center; gap: 15px;">
+    <div class="user-controls">
       <!-- Mode Status Indicator -->
-      <div id="trackingStatus" style="display: flex; align-items: center; gap: 8px; background-color: #28a745; padding: 6px 12px; border-radius: 20px; font-size: 14px;">
-        <span style="display: inline-block; width: 10px; height: 10px; background-color: white; border-radius: 50%;"></span>
+      <div id="trackingStatus">
+        <span></span>
         <span id="modeText">მონიტორინგი აქტიურია</span>
       </div>
 
       <!-- Back to Main Menu Button -->
-      <button onclick="location.href='index.html'" 
-              style="background: rgba(255,255,255,0.1); border: none; color: white; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-weight: 600; transition: all 0.2s;"
-              onmouseover="this.style.backgroundColor='rgba(255,255,255,0.2)'" onmouseout="this.style.backgroundColor='rgba(255,255,255,0.1)'">
+      <button class="back-button" onclick="location.href='index.html'">
         ← მთავარი გვერდი
       </button>
-
     </div>
   </div>
-</header>
+    </header>
+    <style>
+    #mainHeader {
+      background-color: #2c3e50;
+      color: white;
+      padding: 0 5%;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
 
+    #mainHeader > div {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+      min-height: 60px;
+      height: auto;
+      padding: 10px 0;
+      flex-wrap: wrap;
+    }
+
+    /* Logo and Site Name */
+    #mainHeader .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      flex-shrink: 0;
+      margin-bottom: 5px;
+    }
+
+    #mainHeader .logo-icon {
+      background-color: #4a6fa5;
+      width: 40px;
+      height: 40px;
+      min-width: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #mainHeader .logo-icon span {
+      font-size: 20px;
+    }
+
+    #mainHeader h1 {
+      margin: 0;
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    #mainHeader h1 a {
+      color: white;
+      text-decoration: none;
+    }
+
+    /* Main Navigation */
+    #mainHeader nav {
+      margin: 10px 0;
+    }
+
+    #mainHeader nav ul {
+      display: flex;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      gap: 25px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    #mainHeader nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      padding: 8px 12px;
+      border-radius: 4px;
+      transition: background-color 0.2s;
+      display: block;
+      white-space: nowrap;
+    }
+
+    #mainHeader nav a:hover {
+      background-color: #4a6fa5;
+    }
+
+    /* User Controls */
+    #mainHeader .user-controls {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      margin-top: 5px;
+    }
+
+    #mainHeader #trackingStatus {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background-color: #28a745;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    #mainHeader #trackingStatus span:first-child {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      background-color: white;
+      border-radius: 50%;
+    }
+
+    #mainHeader .back-button {
+      background: rgba(255,255,255,0.1);
+      border: none;
+      color: white;
+      padding: 8px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    #mainHeader .back-button:hover {
+      background-color: rgba(255,255,255,0.2);
+    }
+
+    /* Media Queries for Responsiveness */
+
+  
+
+    @media (max-width: 1000px) {
+      #mainHeader > div {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+      }
+      
+      #mainHeader .logo-container {
+        justify-content: center;
+        margin-bottom: 0;
+      }
+      
+      #mainHeader nav ul {
+        gap: 15px;
+      }
+      
+      #mainHeader .user-controls {
+        justify-content: center;
+        margin-top: 0;
+      }
+      #mainHeader #trackingStatus {
+        display: none;
+      }
+    }
+
+    @media (max-width: 480px) {
+      #mainHeader {
+        padding: 0 3%;
+      }
+      
+      #mainHeader nav ul {
+        gap: 10px;
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      #mainHeader .user-controls {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+      }
+      
+      #mainHeader h1 {
+        font-size: 18px;
+      }
+      
+      #mainHeader #trackingStatus {
+        font-size: 12px;
+        padding: 5px 10px;
+      }
+      
+      #mainHeader .back-button {
+        padding: 6px 12px;
+        font-size: 14px;
+      }
+    }
+    </style>
 
 <div id="toolsSection" style="display: none; background: #f8f9fa; padding: 20px; border-radius: 8px; margin-top: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
   <div style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center;">
@@ -389,7 +569,7 @@ body {line-height:1.6;}
 </div>
 
 
-<div id="aboutSection" style="display: none; max-width: 900px; margin: 0 auto; padding: 30px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #333; line-height: 1.7;">
+<div id="aboutSection" style="display: none; max-width: 900px; margin: 0 auto; padding: 30px; color: #333; line-height: 1.7;">
   <!-- Header with gradient accent -->
   <div style="text-align: center; margin-bottom: 40px;">
     <h2 style="color: #2c3e50; font-size: 36px; font-weight: 600; margin-bottom: 15px; position: relative; display: inline-block;">
@@ -478,7 +658,7 @@ body {line-height:1.6;}
   <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; gap: 15px; flex-wrap: wrap;">
     <h2 style="color: #2c3e50; margin: 0; font-size: 24px; font-weight: 600; display: flex; align-items: center; gap: 10px;">
       <span style="background: #4a6fa5; width: 36px; height: 36px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; color: white;">📚</span>
-      კითხვის სავარჯიშოები
+      სავარჯიშოები
     </h2>
   </div>
 
@@ -672,7 +852,7 @@ body {line-height:1.6;}
 </div>
 
 
-<div id="letter-mastery-game" style="display: none; position: relative; width: 100%; height: 92vh; background: #f8fafc; overflow: hidden;">
+<div id="letter-mastery-game" style="display: none; position: relative; width: 100%; height: 92vh;  overflow: hidden;">
 
   <!-- Exercise Title Bar with Level Indicator -->
   <div style="background: #4a6fa5; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center;">
@@ -1067,7 +1247,7 @@ body {line-height:1.6;}
   </script>
 </div>
 
-<div id="emoji-word-finder-game" style="display: none; position: relative; width: 100%; height: 92vh; background: #f8fafc; overflow: hidden;">
+<div id="emoji-word-finder-game" style="display: none; position: relative; width: 100%; height: 92vh;  overflow: hidden;">
 
   <!-- Game Header with Level Indicator -->
   <div style="background: #4aa581; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center;">
@@ -1664,7 +1844,7 @@ body {line-height:1.6;}
   </script>
 </div>
 
-<div id="find-words-game" style="display: none; position: relative; width: 100%; height: 92vh; background: #f8fafc; overflow: hidden;">
+<div id="find-words-game" style="display: none; position: relative; width: 100%; height: 92vh;  overflow: hidden;">
 
   <!-- Game Header with Level Indicator -->
   <div style="background: #8a4daf; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center;">
@@ -2142,7 +2322,7 @@ body {line-height:1.6;}
   </script>
 </div>
 
-<div id="odd-one-out-game" style="display: none; position: relative; width: 100%; height: 92vh; background: #f8fafc; overflow: hidden;">
+<div id="odd-one-out-game" style="display: none; position: relative; width: 100%; height: 92vh;  overflow: hidden;">
 
   <!-- Game Header (same as before) -->
   <div style="background: #af4c63; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center;">
@@ -2529,7 +2709,7 @@ body {line-height:1.6;}
   </script>
 </div>
 
-<div id="gaze-maze-game" style="display: none; position: relative; width: 100%; height: 92vh; background: #f8fafc; overflow: hidden;">
+<div id="gaze-maze-game" style="display: none; position: relative; width: 100%; height: 92vh;  overflow: hidden;">
 
   <!-- Game Header -->
   <div style="background: #5e4caf; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center;">
@@ -2861,7 +3041,7 @@ body {line-height:1.6;}
   </script>
 </div>
 
-<div id="syllable-builder-game" style="display:none; position: relative; width: 100%; height: 92vh; background: #f8fafc; overflow: hidden;">
+<div id="syllable-builder-game" style="display:none; position: relative; width: 100%; height: 92vh; overflow: hidden;">
 
   <!-- Game Header with Level Indicator -->
   <div style="background: #d97706; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center;">
@@ -3461,7 +3641,7 @@ body {line-height:1.6;}
   </script>
 </div>
 
-<div id="letter-order-game" style="display: none; position: relative; width: 100%; height: 92vh; background: #f8fafc; overflow: hidden;">
+<div id="letter-order-game" style="display: none; position: relative; width: 100%; height: 92vh; overflow: hidden;">
 
   <!-- Game Header with Level Indicator -->
   <div style="background: #059669; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center;">
@@ -4017,7 +4197,7 @@ body {line-height:1.6;}
 
 <style>
   /* Responsive adjustments */
-  @media (max-width: 1050px) {
+  @media (max-width: 1100px) {
     #mainHeader {
       padding: 12px 15px;
     }
@@ -4037,7 +4217,7 @@ body {line-height:1.6;}
     }
   }
 
-  @media (max-width: 1100px) {
+  @media (max-width: 1250px) {
     #mainHeader {
       padding: 12px 15px;
     }
