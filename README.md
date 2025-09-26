@@ -7,7 +7,7 @@ by the Brown WebGazer Team.
 
 ## What I added:
 - HTML/CSS/JS files for games 
-- Minor modifications to main.js for game integration
+- Minor modifications to main.js and calibration.js for game integration
 - "ourHelper" folder within the webgazer directory
 
 ## Project Structure:

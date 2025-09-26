@@ -673,24 +673,24 @@ body {line-height:1.6;}
       <span style="margin-right: 10px;">🔤</span> 
       Letter Mastery
     </h2>
-    
+
     <!-- Level Indicator Boxes (Top Right) -->
     <div style="display: flex; gap: 8px;">
       <div style="font-size: 14px; color: white; margin-right: 5px; font-weight: 500; margin-top: 3px;">Level</div>
-      <div id="level1" class="level-box active">1</div>
-      <div id="level2" class="level-box">2</div>
-      <div id="level3" class="level-box">3</div>
+      <div id="levelLM-1" class="level-box-LM active-LM">1</div>
+      <div id="levelLM-2" class="level-box-LM">2</div>
+      <div id="levelLM-3" class="level-box-LM">3</div>
     </div>
-    
+
     <div>
-      <button onclick="closeExercise()" style="background: none; color: white; border: 1px solid rgba(255,255,255,0.3); padding: 6px 12px; border-radius: 4px; font-size: 14px;">
+      <button onclick="closeExerciseLM()" style="background: none; color: white; border: 1px solid rgba(255,255,255,0.3); padding: 6px 12px; border-radius: 4px; font-size: 14px;">
         უკან დაბრუნება
       </button>
     </div>
   </div>
 
   <!-- Start Screen -->
-  <div id="startScreen" style="height: calc(100% - 54px); display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; text-align: center;">
+  <div id="startScreenLM" style="height: calc(100% - 54px); display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; text-align: center;">
     <div style="max-width: 500px;">
       <h3 style="color: #4a6fa5; font-size: 24px; margin-bottom: 20px;">Letter Mastery Challenge</h3>
       <div style="background: white; border-radius: 12px; padding: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-bottom: 30px;">
@@ -701,39 +701,39 @@ body {line-height:1.6;}
           შემდეგ დონეზე გადასასვლელად, დაასრულე 4 რაუნდი.
         </p>
       </div>
-      <button onclick="startGame()" style="background: #4a6fa5; color: white; border: none; padding: 14px 40px; border-radius: 8px; font-size: 16px; font-weight: 500; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+      <button onclick="startGameLM()" style="background: #4a6fa5; color: white; border: none; padding: 14px 40px; border-radius: 8px; font-size: 16px; font-weight: 500; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
         თამაშის დაწყება
       </button>
     </div>
   </div>
 
   <!-- Game Screen -->
-  <div id="gameScreen" style="height: calc(100% - 54px); display: none; flex-direction: column;">
-    
+  <div id="gameScreenLM" style="height: calc(100% - 54px); display: none; flex-direction: column;">
+
     <!-- Main Game Area -->
     <div style="flex: 1; display: flex; flex-direction: column; padding: 20px; overflow-y: auto;">
-      
+
       <!-- Target Display -->
       <div style="text-align: center; margin-bottom: 20px;">
         <div style="display: inline-block; background: #e2e8f0; padding: 8px 20px; border-radius: 20px;">
           <span style="font-size: 14px; color: #4a6fa5;">იპოვე ყველა:</span>
-          <span id="targetLetter" style="font-size: 28px; font-weight: bold; color: #4a6fa5; margin-left: 10px;">B</span>
+          <span id="targetLetterLM" style="font-size: 28px; font-weight: bold; color: #4a6fa5; margin-left: 10px;">B</span>
         </div>
         <div style="margin-top: 10px;">
-          <span id="foundCount" style="font-size: 16px; font-weight: bold; color: #4a6fa5;">0</span>
+          <span id="foundCountLM" style="font-size: 16px; font-weight: bold; color: #4a6fa5;">0</span>
           <span style="font-size: 16px; color: #94a3b8;">/</span>
-          <span id="totalTargets" style="font-size: 16px; color: #94a3b8;">6</span>
+          <span id="totalTargetsLM" style="font-size: 16px; color: #94a3b8;">6</span>
         </div>
       </div>
 
       <!-- Game Grid -->
-      <div id="gameArea" style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; padding: 0 20px 20px; max-width: 800px; margin: 0 auto; flex: 1; align-content: center;">
+      <div id="gameAreaLM" style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; padding: 0 20px 20px; max-width: 800px; margin: 0 auto; flex: 1; align-content: center;">
         <!-- Letters will be dynamically inserted here -->
       </div>
 
       <!-- Check Button -->
-      <div id="checkButtonContainer" style="display: none; text-align: center; margin-top: 20px; margin-bottom: 20px;">
-        <button onclick="verifyCompletion()" style="background: #4a6fa5; color: white; border: none; padding: 12px 30px; border-radius: 8px; font-size: 16px; font-weight: 500; cursor: pointer;">
+      <div id="checkButtonContainerLM" style="display: none; text-align: center; margin-top: 20px; margin-bottom: 20px;">
+        <button onclick="verifyCompletionLM()" style="background: #4a6fa5; color: white; border: none; padding: 12px 30px; border-radius: 8px; font-size: 16px; font-weight: 500; cursor: pointer;">
           პასუხის შემოწმება
         </button>
       </div>
@@ -741,30 +741,30 @@ body {line-height:1.6;}
 
     <!-- Round Progress Boxes (Bottom) -->
     <div style="padding: 15px 20px; background: #edf2f7; border-top: 1px solid #e2e8f0; display: flex; justify-content: center; gap: 15px;">
-      <div id="round1" class="round-box"></div>
-      <div id="round2" class="round-box"></div>
-      <div id="round3" class="round-box"></div>
-      <div id="round4" class="round-box"></div>
+      <div id="roundLM-1" class="round-box-LM"></div>
+      <div id="roundLM-2" class="round-box-LM"></div>
+      <div id="roundLM-3" class="round-box-LM"></div>
+      <div id="roundLM-4" class="round-box-LM"></div>
     </div>
   </div>
 
   <!-- Success Modal -->
-  <div id="feedbackModal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 25px; border-radius: 12px; box-shadow: 0 5px 25px rgba(0,0,0,0.1); text-align: center; max-width: 300px; width: 90%; z-index: 100;">
+  <div id="feedbackModalLM" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 25px; border-radius: 12px; box-shadow: 0 5px 25px rgba(0,0,0,0.1); text-align: center; max-width: 300px; width: 90%; z-index: 100;">
     <div style="width: 60px; height: 60px; background: #4a6fa5; border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center;">
       <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M20 6L9 17L4 12" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     </div>
-    <h3 id="resultTitle" style="color: #4a6fa5; margin-bottom: 10px; font-size: 18px;">ყოჩაღ!</h3>
-    <p id="resultMessage" style="color: #64748b; margin-bottom: 20px; font-size: 15px;">შენ იპოვე ყველა სწორად!</p>
-    <button onclick="startNewRound()" style="background: #4a6fa5; color: white; border: none; padding: 8px 20px; border-radius: 6px; font-size: 14px; cursor: pointer; width: 100%;">
+    <h3 id="resultTitleLM" style="color: #4a6fa5; margin-bottom: 10px; font-size: 18px;">ყოჩაღ!</h3>
+    <p id="resultMessageLM" style="color: #64748b; margin-bottom: 20px; font-size: 15px;">შენ იპოვე ყველა სწორად!</p>
+    <button onclick="startNewRoundLM()" style="background: #4a6fa5; color: white; border: none; padding: 8px 20px; border-radius: 6px; font-size: 14px; cursor: pointer; width: 100%;">
       გაგრძელება
     </button>
   </div>
 
   <style>
     /* Level and Round Box Styling */
-    .level-box {
+    .level-box-LM {
       width: 28px;
       height: 28px;
       border-radius: 6px;
@@ -777,14 +777,14 @@ body {line-height:1.6;}
       color: white;
       transition: all 0.3s;
     }
-    
-    .level-box.active {
+
+    .level-box-LM.active-LM {
       background: white;
       color: #4a6fa5;
       transform: scale(1.1);
     }
-    
-    .round-box {
+
+    .round-box-LM {
       width: 40px;
       height: 40px;
       border-radius: 8px;
@@ -795,16 +795,16 @@ body {line-height:1.6;}
       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
       position: relative;
     }
-    
-    .round-box.completed::after {
+
+    .round-box-LM.completed-LM::after {
       content: "✓";
       color: #4CAF50;
       font-size: 20px;
       font-weight: bold;
     }
-    
+
     /* Letter styling */
-    .letter {
+    .letter-LM {
       aspect-ratio: 1/1;
       display: flex;
       align-items: center;
@@ -818,16 +818,16 @@ body {line-height:1.6;}
       user-select: none;
       padding: 15px;
     }
-    .letter:hover {
+    .letter-LM:hover {
       transform: scale(1.05);
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
-    .letter.found {
+    .letter-LM.found-LM {
       background-color: #4CAF50 !important;
       color: white !important;
       transform: scale(0.95);
     }
-    .letter.incorrect {
+    .letter-LM.incorrect-LM {
       background-color: #f44336 !important;
       color: white !important;
     }
@@ -835,224 +835,227 @@ body {line-height:1.6;}
 
   <script>
     // Game variables
-    let currentLevel = 1;
-    let roundsCompleted = 0;
-    const maxLevels = 3;
-    const maxRounds = 4;
-    let foundLetters = 0;
-    let totalLetters = 5;
-    let letters = [];
-    let foundElements = [];
-    let levelConfig = {
+    let currentLevelLM = 1;
+    let roundsCompletedLM = 0;
+    const maxLevelsLM = 3;
+    const maxRoundsLM = 4;
+    let foundLettersLM = 0;
+    let totalLettersLM = 5;
+    let lettersLM = [];
+    let foundElementsLM = [];
+    let levelConfigLM = {
       1: { targets: 5, gridSize: 6, fontSize: 36, similarLetters: 5 },
       2: { targets: 8, gridSize: 6, fontSize: 32, similarLetters: 7 },
       3: { targets: 10, gridSize: 7, fontSize: 28, similarLetters: 9 }
     };
 
     // Start the game (from start screen)
-    function startGame() {
-      document.getElementById('startScreen').style.display = 'none';
-      document.getElementById('gameScreen').style.display = 'flex';
-      
-      initGame();
+    function startGameLM() {
+      document.getElementById('startScreenLM').style.display = 'none';
+      document.getElementById('gameScreenLM').style.display = 'flex';
+      initGameLM();
     }
 
     // Initialize game
-    function initGame() {
-      foundLetters = 0;
-      foundElements = [];
-      document.getElementById('foundCount').textContent = '0';
-      document.getElementById('totalTargets').textContent = levelConfig[currentLevel].targets;
-      document.getElementById('checkButtonContainer').style.display = 'none';
-      
+    function initGameLM() {
+      foundLettersLM = 0;
+      foundElementsLM = [];
+      document.getElementById('foundCountLM').textContent = '0';
+      document.getElementById('totalTargetsLM').textContent = levelConfigLM[currentLevelLM].targets;
+      document.getElementById('checkButtonContainerLM').style.display = 'none';
+
       // Update displays
-      updateLevelDisplay();
-      updateRoundDisplay();
-      
-      generateLetters();
+      updateLevelDisplayLM();
+      updateRoundDisplayLM();
+
+      generateLettersLM();
     }
 
     // Update level boxes
-    function updateLevelDisplay() {
-      for (let i = 1; i <= maxLevels; i++) {
-        const box = document.getElementById(`level${i}`);
-        box.classList.toggle('active', i === currentLevel);
+    function updateLevelDisplayLM() {
+      for (let i = 1; i <= maxLevelsLM; i++) {
+        const box = document.getElementById(`levelLM-${i}`);
+        if (box) {
+          box.classList.toggle('active-LM', i === currentLevelLM);
+        }
       }
     }
 
     // Update round boxes
-    function updateRoundDisplay() {
-      for (let i = 1; i <= maxRounds; i++) {
-        const box = document.getElementById(`round${i}`);
-        box.classList.toggle('completed', i <= roundsCompleted);
+    function updateRoundDisplayLM() {
+      for (let i = 1; i <= maxRoundsLM; i++) {
+        const box = document.getElementById(`roundLM-${i}`);
+        if (box) {
+          box.classList.toggle('completed-LM', i <= roundsCompletedLM);
+        }
       }
     }
 
     // Generate letters for the game
-    function generateLetters() {
-      const gameArea = document.getElementById('gameArea');
+    function generateLettersLM() {
+      const gameArea = document.getElementById('gameAreaLM');
       gameArea.innerHTML = '';
-      
-      const config = levelConfig[currentLevel];
-      totalLetters = config.targets;
-      
+
+      const config = levelConfigLM[currentLevelLM];
+      totalLettersLM = config.targets;
+
       // Set grid size
       gameArea.style.gridTemplateColumns = `repeat(${config.gridSize}, 1fr)`;
-      
-      const targetLetter = getRandomLetter();
-      document.getElementById('targetLetter').textContent = targetLetter;
-      
+
+      const targetLetter = getRandomLetterLM();
+      document.getElementById('targetLetterLM').textContent = targetLetter;
+
       // Create letters array
-      letters = Array(config.targets).fill(targetLetter);
-      const similarLetters = getSimilarLettersGeorgian(targetLetter, config.similarLetters);
-      
+      lettersLM = Array(config.targets).fill(targetLetter);
+      const similarLetters = getSimilarLettersGeorgianLM(targetLetter, config.similarLetters);
+
       // Add distractors
       const totalCells = config.gridSize * config.gridSize;
       for (let i = 0; i < totalCells - config.targets; i++) {
-        letters.push(similarLetters[i % similarLetters.length]);
+        lettersLM.push(similarLetters[i % similarLetters.length]);
       }
-      
+
       // Shuffle and display
-      letters = shuffleArray(letters);
-      letters.forEach((letter) => {
+      lettersLM = shuffleArrayLM(lettersLM);
+      lettersLM.forEach((letter) => {
         const letterElement = document.createElement('div');
-        letterElement.className = 'letter';
+        letterElement.className = 'letter-LM';
         letterElement.dataset.value = letter;
         letterElement.dataset.isTarget = (letter === targetLetter).toString();
         letterElement.style.fontSize = `${config.fontSize}px`;
         letterElement.textContent = letter;
-        
+
         // Ensure visible styling
         letterElement.style.display = "flex";
         letterElement.style.alignItems = "center";
         letterElement.style.justifyContent = "center";
         letterElement.style.width = "100%";
         letterElement.style.height = "100%";
-        
+
         // Click handler
         letterElement.onclick = function() {
-          if (!this.classList.contains('found')) {
-            checkLetter(this);
+          if (!this.classList.contains('found-LM')) {
+            checkLetterLM(this);
           }
         };
-        
+
         gameArea.appendChild(letterElement);
       });
     }
 
     // Check selected letter
-    function checkLetter(element) {
-      const targetLetter = document.getElementById('targetLetter').textContent;
+    function checkLetterLM(element) {
+      const targetLetter = document.getElementById('targetLetterLM').textContent;
       const isCorrect = element.dataset.value === targetLetter;
-      
+
       if (isCorrect) {
         // Correct letter
-        foundLetters++;
-        element.classList.add('found');
-        foundElements.push(element);
-        document.getElementById('foundCount').textContent = foundLetters;
-        
+        foundLettersLM++;
+        element.classList.add('found-LM');
+        foundElementsLM.push(element);
+        document.getElementById('foundCountLM').textContent = foundLettersLM;
+
         // Check if all letters found
-        if (foundLetters >= totalLetters) {
-          document.getElementById('checkButtonContainer').style.display = 'block';
+        if (foundLettersLM >= totalLettersLM) {
+          document.getElementById('checkButtonContainerLM').style.display = 'block';
         }
       } else {
         // Incorrect letter
-        element.classList.add('incorrect');
-        
+        element.classList.add('incorrect-LM');
+
         setTimeout(() => {
-          element.classList.remove('incorrect');
+          element.classList.remove('incorrect-LM');
         }, 500);
       }
     }
 
     // Verify all found letters are correct
-    function verifyCompletion() {
-      const targetLetter = document.getElementById('targetLetter').textContent;
+    function verifyCompletionLM() {
+      const targetLetter = document.getElementById('targetLetterLM').textContent;
       let allCorrect = true;
-      
+
       // Check all found elements
-      foundElements.forEach(el => {
+      foundElementsLM.forEach(el => {
         if (el.dataset.value !== targetLetter) {
           allCorrect = false;
-          el.classList.add('incorrect');
+          el.classList.add('incorrect-LM');
         }
       });
-      
+
       // Show results
       if (allCorrect) {
-        document.getElementById('resultTitle').textContent = "ყოჩაღ!";
-        document.getElementById('resultMessage').textContent = `შენ იპოვე ${totalLetters} ${targetLetter}!`;
-        document.getElementById('resultTitle').style.color = "#4a6fa5";
-        
+        document.getElementById('resultTitleLM').textContent = "ყოჩაღ!";
+        document.getElementById('resultMessageLM').textContent = `შენ იპოვე ${totalLettersLM} ${targetLetter}!`;
+        document.getElementById('resultTitleLM').style.color = "#4a6fa5";
+
         // Update progress
-        completeRound();
+        completeRoundLM();
       } else {
-        document.getElementById('resultTitle').textContent = "თითქმის!";
-        document.getElementById('resultMessage').textContent = "ზოგი ასო არ იყო სწორი, თავიდან სცადე!";
-        document.getElementById('resultTitle').style.color = "#f44336";
+        document.getElementById('resultTitleLM').textContent = "თითქმის!";
+        document.getElementById('resultMessageLM').textContent = "ზოგი ასო არ იყო სწორი, თავიდან სცადე!";
+        document.getElementById('resultTitleLM').style.color = "#f44336";
       }
-      
-      document.getElementById('feedbackModal').style.display = 'block';
+
+      document.getElementById('feedbackModalLM').style.display = 'block';
     }
 
     // Complete a round and update progress
-    function completeRound() {
-      roundsCompleted++;
-      updateRoundDisplay();
-      
+    function completeRoundLM() {
+      roundsCompletedLM++;
+      updateRoundDisplayLM();
+
       // Level up if completed all rounds
-      if (roundsCompleted >= maxRounds && currentLevel < maxLevels) {
-        roundsCompleted = 0;
-        currentLevel++;
-        updateLevelDisplay();
+      if (roundsCompletedLM >= maxRoundsLM && currentLevelLM < maxLevelsLM) {
+        roundsCompletedLM = 0;
+        currentLevelLM++;
+        updateLevelDisplayLM();
       }
     }
 
     // Start new round
-    function startNewRound() {
-      document.getElementById('feedbackModal').style.display = 'none';
-      initGame();
+    function startNewRoundLM() {
+      document.getElementById('feedbackModalLM').style.display = 'none';
+      initGameLM();
     }
 
     // Helper functions
-    function getRandomLetter() {
+    function getRandomLetterLM() {
       const letters = ['ბ', 'დ', 'პ', 'წ', 'შ', 'ნ', 'მ'];
       return letters[Math.floor(Math.random() * letters.length)];
     }
 
-  function getSimilarLettersGeorgian(letter, count) {
-  const similarMap = {
-    'ბ': ['დ', 'პ', 'ფ', 'გ', 'წ', 'ძ', 'თ', 'ჭ', 'ხ'],
-    'დ': ['ბ', 'თ', 'ტ', 'წ', 'ზ', 'ყ', 'ჭ', 'ხ', 'ფ'],
-    'პ': ['ბ', 'ფ', 'ფ', 'თ', 'ქ', 'ჭ', 'ხ', 'ზ', 'შ'],
-    'წ': ['შ', 'შ', 'ჟ', 'ჭ', 'ფ', 'ხ', 'ჯ', 'ძ', 'ტ'],
-    'შ': ['წ', 'ჟ', 'ჭ', 'ხ', 'ზ', 'ჯ', 'ტ', 'ფ', 'ძ'],
-    'ნ': ['მ', 'უ', 'ლ', 'ხ', 'ჯ', 'ყ', 'ტ', 'ზ', 'ფ'],
-    'მ': ['ნ', 'უ', 'ლ', 'ვ', 'ფ', 'ყ', 'თ', 'ჯ', 'ხ']
-  };
-  const allSimilar = similarMap[letter] || ['ა', 'ს', 'ტ', 'ქ', 'ყ', 'ზ', 'ხ', 'ღ', 'ფ'];
-  return allSimilar.slice(0, count);
-}
+    function getSimilarLettersGeorgianLM(letter, count) {
+      const similarMap = {
+        'ბ': ['დ', 'პ', 'ფ', 'გ', 'წ', 'ძ', 'თ', 'ჭ', 'ხ'],
+        'დ': ['ბ', 'თ', 'ტ', 'წ', 'ზ', 'ყ', 'ჭ', 'ხ', 'ფ'],
+        'პ': ['ბ', 'ფ', 'ფ', 'თ', 'ქ', 'ჭ', 'ხ', 'ზ', 'შ'],
+        'წ': ['შ', 'შ', 'ჟ', 'ჭ', 'ფ', 'ხ', 'ჯ', 'ძ', 'ტ'],
+        'შ': ['წ', 'ჟ', 'ჭ', 'ხ', 'ზ', 'ჯ', 'ტ', 'ფ', 'ძ'],
+        'ნ': ['მ', 'უ', 'ლ', 'ხ', 'ჯ', 'ყ', 'ტ', 'ზ', 'ფ'],
+        'მ': ['ნ', 'უ', 'ლ', 'ვ', 'ფ', 'ყ', 'თ', 'ჯ', 'ხ']
+      };
+      const allSimilar = similarMap[letter] || ['ა', 'ს', 'ტ', 'ქ', 'ყ', 'ზ', 'ხ', 'ღ', 'ფ'];
+      return allSimilar.slice(0, count);
+    }
 
-    function shuffleArray(array) {
+    function shuffleArrayLM(array) {
       return array.sort(() => Math.random() - 0.5);
     }
 
-    function closeExercise() {
+    function closeExerciseLM() {
       document.getElementById('letter-mastery-game').style.display = 'none';
-      document.getElementById('startScreen').style.display = 'flex';
-      document.getElementById('gameScreen').style.display = 'none';
+      document.getElementById('startScreenLM').style.display = 'flex';
+      document.getElementById('gameScreenLM').style.display = 'none';
       document.getElementById('exercisesSection').style.display='block';
       // Reset game state
-      currentLevel = 1;
-      roundsCompleted = 0;
+      currentLevelLM = 1;
+      roundsCompletedLM = 0;
     }
 
     // Initialize on load
     window.onload = function() {
-      document.getElementById('startScreen').style.display = 'flex';
-      document.getElementById('gameScreen').style.display = 'none';
+      document.getElementById('startScreenLM').style.display = 'flex';
+      document.getElementById('gameScreenLM').style.display = 'none';
     };
   </script>
 </div>
