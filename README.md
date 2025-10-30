@@ -9,7 +9,7 @@ by the Brown WebGazer Team.
 You can try the project here: [ReadEaseGeo Website](https://giorgichachava.github.io/ReadEaseGeorgia/)  
 
 ## Overview
-**ReadEaseGeo** is a collection of browser-based educational games designed for **Georgian children**, featuring **Georgian-language instructions and content**.  
+**ReadEaseGeo** is a collection of browser-based educational games designed for **Georgian children** with reading challenges, featuring **Georgian-language instructions and content**.  
 The games use **eye-tracking** technology via WebGazer.js to make reading and learning more interactive and accessible.
 
 ## What I Added
