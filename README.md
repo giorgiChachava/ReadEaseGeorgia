@@ -9,7 +9,12 @@ You can try the project here: [ReadEaseGeo Website](https://giorgichachava.githu
 **ReadEaseGeo** is a collection of browser-based educational games designed for **Georgian children** with reading challenges, featuring **Georgian-language instructions and content**.  
 The games use **eye-tracking** technology via WebGazer.js to make reading and learning more interactive and accessible.
 
-## 🛠 Project Highlights & Development
+## Features
+* Localized Education: Fully localized instructions and content in the Georgian language.
+* Eye-Tracking Interaction: Uses advanced gaze-detection to allow children to interact with games simply by looking at the screen.
+* Accessibility First: Designed to support learners who need alternative ways to engage with text and educational material.
+
+## Project Highlights & Development
 While utilizing the [WebGazer.js](https://github.com/brownhci/WebGazer) library for its core eye-tracking capabilities, this project introduces:
 * **Custom Game Suite:** A collection of unique Web educational games tailored for neurodiverse learners.
 * **Seamless Integration:** Modified calibration and main execution scripts to ensure a smooth user experience within the game environment.
