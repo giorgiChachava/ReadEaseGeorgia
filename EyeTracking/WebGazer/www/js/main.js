@@ -114,15 +114,30 @@ function hideExercises(){
   });
 }
   function filterExercises(level) {
-    // Highlight the active category chip via a class (styled in CSS)
-    document.querySelectorAll('#exercisesSection .ex-filter').forEach(btn => {
-      btn.classList.toggle('is-active', btn.dataset.filter === level);
+    // Highlight the active category button. The buttons are labelled in
+    // Georgian, so map the level id to its label instead of matching English.
+    const levelToLabel = {
+      all: 'ყველა',
+      level1: 'მარტივი',
+      level2: 'საშუალო',
+      level3: 'რთული'
+    };
+    const activeLabel = levelToLabel[level];
+    const buttons = document.querySelectorAll('#exercisesSection button');
+    buttons.forEach(button => {
+      const isActive = button.textContent.trim() === activeLabel;
+      button.style.background = isActive ? '#4a6fa5' : '#e2e8f0';
+      button.style.color = isActive ? 'white' : '#2c3e50';
     });
 
-    // Show/hide cards. Clearing the inline value lets the CSS grid display win.
-    document.querySelectorAll('.exercise-card').forEach(card => {
-      const show = level === 'all' || card.getAttribute('data-level') === level;
-      card.style.display = show ? '' : 'none';
+    // Filter exercises
+    const exercises = document.querySelectorAll('.exercise-card');
+    exercises.forEach(exercise => {
+      if (level === 'all' || exercise.getAttribute('data-level') === level) {
+        exercise.style.display = 'block';
+      } else {
+        exercise.style.display = 'none';
+      }
     });
   }
 

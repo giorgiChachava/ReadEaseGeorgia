@@ -17,222 +17,51 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert/dist/sweetalert.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- Warm-editorial type: Georgian serif for display, Georgian sans for text -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@400;500;600;700;800&family=Noto+Serif+Georgian:wght@600;700;800&display=swap" rel="stylesheet">
-
-<style id="editorial-design">
-  /* ============================================================
-     ReadEase — "Warm editorial" design system
-     cream paper · warm ink · terracotta accent · flat bordered
-     cards with soft hard-shadows · Georgian serif headlines
-     ============================================================ */
-  :root{
-    --paper:#f3ead9;        /* warm cream page */
-    --paper-2:#eaddc6;      /* deeper cream panels */
-    --surface:#fffdf7;      /* warm white card */
-    --ink:#2b2018;          /* warm near-black text & lines */
-    --ink-soft:#6f6154;     /* muted brown text */
-    --accent:#cf5230;       /* terracotta */
-    --accent-ink:#a53c1e;   /* darker terracotta */
-    --easy:#3f7d5b;         /* forest green */
-    --medium:#bd7f16;       /* ochre */
-    --hard:#b53f28;         /* brick */
-    --radius:14px;
-    --shadow:4px 4px 0 var(--ink);
-    --shadow-sm:3px 3px 0 var(--ink);
-  }
-
-  html{ background:var(--paper); }
-  body{
-    background:var(--paper);
-    color:var(--ink);
-    font-family:'Noto Sans Georgian','Segoe UI',system-ui,-apple-system,sans-serif;
-    -webkit-font-smoothing:antialiased;
-  }
-  h1,h2,h3,h4{ font-family:'Noto Serif Georgian',Georgia,'Times New Roman',serif; letter-spacing:-0.01em; }
-  ::selection{ background:var(--accent); color:#fff; }
-
-  /* ---------- Shared button ---------- */
-  .btn{
-    font-family:'Noto Sans Georgian',sans-serif; font-size:16px; font-weight:700; cursor:pointer;
-    border:2px solid var(--ink); border-radius:12px; padding:13px 26px;
-    box-shadow:var(--shadow); transition:transform .12s ease, box-shadow .12s ease, background .2s;
-    display:inline-flex; align-items:center; gap:8px; line-height:1;
-  }
-  .btn:hover{ transform:translate(-2px,-2px); box-shadow:6px 6px 0 var(--ink); text-decoration:none; color:inherit; }
-  .btn:active{ transform:translate(0,0); box-shadow:2px 2px 0 var(--ink); }
-  .btn-primary{ background:var(--accent); color:#fff; }
-  .btn-primary:hover{ color:#fff; }
-  .btn-ghost{ background:var(--surface); color:var(--ink); }
-  .btn[disabled]{ opacity:.65; cursor:progress; }
-
-  /* ---------- HERO ---------- */
-  .hero{
-    background:
-      radial-gradient(circle at 12% 20%, rgba(207,82,48,0.07), transparent 40%),
-      radial-gradient(circle at 88% 6%, rgba(63,125,91,0.08), transparent 38%),
-      var(--paper);
-    padding:70px 20px 56px; border-bottom:2px solid var(--ink); position:relative;
-  }
-  .hero-inner{ max-width:920px; margin:0 auto; text-align:center; }
-  .hero-eyebrow{
-    display:inline-block; font-size:12.5px; font-weight:700; letter-spacing:0.16em; text-transform:uppercase;
-    color:var(--accent-ink); background:var(--surface); border:1.5px solid var(--ink); border-radius:999px;
-    padding:6px 16px; box-shadow:var(--shadow-sm); margin-bottom:26px;
-  }
-  .hero-title{ font-size:clamp(33px,6vw,56px); font-weight:800; line-height:1.07; margin:0 0 16px; }
-  .hero-title .u{ color:var(--accent); }
-  .hero-sub{ font-size:clamp(16px,2.3vw,20px); color:var(--ink-soft); max-width:560px; margin:0 auto 34px; font-weight:500; }
-  .hero-art{
-    width:min(340px,84%); margin:0 auto 40px; background:var(--surface);
-    border:2px solid var(--ink); border-radius:20px; box-shadow:var(--shadow); padding:22px;
-  }
-  .hero-art svg{ display:block; width:100%; height:auto; }
-  .hero-features{ display:flex; flex-wrap:wrap; gap:16px; justify-content:center; margin:0 auto 32px; max-width:720px; }
-  .feature{
-    flex:1 1 190px; max-width:220px; background:var(--surface); border:1.5px solid var(--ink);
-    border-radius:var(--radius); padding:18px 16px; box-shadow:var(--shadow-sm); text-align:left;
-  }
-  .feature-ic{
-    font-size:23px; display:inline-grid; place-items:center; width:44px; height:44px;
-    border:1.5px solid var(--ink); border-radius:10px; background:var(--paper-2); margin-bottom:12px;
-  }
-  .feature b{ display:block; font-size:15px; margin-bottom:2px; color:var(--ink); }
-  .feature span{ display:block; color:var(--ink-soft); font-size:13px; }
-  .callout{
-    max-width:640px; margin:0 auto 30px; text-align:left; background:#fbf1dd;
-    border:1.5px solid var(--ink); border-left:6px solid var(--accent); border-radius:12px;
-    padding:14px 18px; box-shadow:var(--shadow-sm); font-size:14px; line-height:1.55;
-  }
-  .callout small{ color:var(--ink-soft); }
-  .hero-cta-label{ font-size:13px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:var(--ink-soft); margin:0 0 16px; }
-  .hero-cta{ display:flex; flex-wrap:wrap; gap:14px; justify-content:center; }
-
-  /* ---------- SECTION HEADERS ---------- */
-  .sec-head{ display:flex; align-items:flex-start; gap:14px; margin-bottom:22px; }
-  .sec-mark{
-    width:46px; height:46px; flex-shrink:0; border:2px solid var(--ink); border-radius:12px;
-    background:var(--accent); color:#fff; display:grid; place-items:center; font-size:22px; box-shadow:var(--shadow-sm);
-  }
-  .sec-title{ font-size:clamp(25px,4vw,32px); font-weight:800; margin:0; }
-  .sec-lead{ color:var(--ink-soft); margin:4px 0 0; font-size:15px; }
-
-  /* ---------- EXERCISE LIST ---------- */
-  .ex-wrap{ max-width:900px; margin:0 auto; padding:40px 20px 64px; }
-  .ex-filters{ display:flex; gap:10px; margin-bottom:24px; overflow-x:auto; padding:4px 2px; }
-  .ex-filter{
-    font-family:'Noto Sans Georgian',sans-serif; font-size:14px; font-weight:700; white-space:nowrap;
-    background:var(--surface); color:var(--ink); border:2px solid var(--ink); border-radius:999px;
-    padding:8px 18px; cursor:pointer; box-shadow:var(--shadow-sm); transition:transform .1s, box-shadow .1s;
-  }
-  .ex-filter:hover{ transform:translate(-1px,-1px); box-shadow:4px 4px 0 var(--ink); text-decoration:none; }
-  .ex-filter.is-active{ background:var(--ink); color:var(--paper); }
-
-  #exercisesContainer{ display:grid; gap:18px; grid-template-columns:1fr; align-items:start; }
-  @media(min-width:680px){ #exercisesContainer{ grid-template-columns:1fr 1fr; } }
-
-  .exercise-card{
-    position:relative; display:grid; grid-template-columns:auto 1fr; gap:16px; align-items:start;
-    background:var(--surface); border:2px solid var(--ink); border-radius:var(--radius);
-    box-shadow:var(--shadow); padding:20px 20px 22px; cursor:pointer;
-    transition:transform .12s ease, box-shadow .12s ease;
-  }
-  .exercise-card:hover{ transform:translate(-3px,-3px); box-shadow:7px 7px 0 var(--ink); }
-  .exercise-card::before{
-    content:attr(data-index); position:absolute; top:16px; right:18px;
-    font-family:'Noto Serif Georgian',serif; font-size:13px; font-weight:700; color:var(--ink-soft); opacity:.6;
-  }
-  .ex-emoji{
-    font-size:26px; width:56px; height:56px; display:grid; place-items:center;
-    border:2px solid var(--ink); border-radius:12px; background:var(--paper-2);
-  }
-  .ex-body{ min-width:0; }
-  .ex-head{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:7px; padding-right:22px; }
-  .ex-title{ margin:0; font-size:19px; font-weight:800; }
-  .ex-badge{
-    font-size:11px; font-weight:800; letter-spacing:0.05em; text-transform:uppercase;
-    padding:3px 9px; border-radius:999px; border:1.5px solid var(--ink); background:var(--surface);
-  }
-  .ex-badge.easy{ color:var(--easy); }
-  .ex-badge.medium{ color:var(--medium); }
-  .ex-badge.hard{ color:var(--hard); }
-  .ex-desc{ margin:0 0 12px; color:var(--ink-soft); font-size:14px; line-height:1.55; }
-  .ex-tags{ display:flex; flex-wrap:wrap; gap:8px; }
-  .ex-tag{
-    font-size:12px; font-weight:600; color:var(--ink); background:var(--paper-2);
-    border:1.5px solid var(--ink); border-radius:8px; padding:3px 10px;
-  }
-
-  /* ---------- Section wrappers inherit the paper look ---------- */
-  #toolsSection, #aboutSection{ background:transparent !important; }
-</style>
 
 </head>
 <body>
 
 <!-- Intro THINGIES----------------->
-<div id="introSection" class="hero">
-  <div class="hero-inner">
-    <span class="hero-eyebrow">დისლექსია · ADHD · კითხვა</span>
+<div id="introSection" style="padding: 50px 20px; text-align: center; background-color: #f7f9fc; border-bottom: 2px solid #e0e6ed; font-family: 'Arial', sans-serif; line-height: 1.6;">
+  <div style="max-width: 800px; margin: 0 auto;">
+    <h1 style="font-size: 42px; font-weight: 800; color: #2c3e50; margin-bottom: 15px; line-height: 1.2;">
+      უკეთ წაიკითხე, იყავი კონცენტრირებული
+    </h1>
+    <p style="font-size: 20px; color: #4a6fa5; font-weight: 500; margin-bottom: 30px;">
+      დახმარება დისლექსიისა და ყურადღების პრობლემებისთვის
+    </p>
 
-    <h1 class="hero-title">უკეთ <span class="u">წაიკითხე</span>,<br>იყავი კონცენტრირებული</h1>
-    <p class="hero-sub">დახმარება დისლექსიისა და ყურადღების პრობლემებისთვის</p>
+    <img src="https://placehold.co/400x250/2c3e50/f7f9fc?text=ReadEase+Demo" alt="Person using ReadEase with AI assistance" style="width: 300px; max-width: 100%; height: auto; border-radius: 12px; margin: 20px 0; box-shadow: 0 8px 16px rgba(0,0,0,0.1);">
 
-    <div class="hero-art">
-      <svg viewBox="0 0 240 175" role="img" aria-label="წიგნი და თვალი">
-        <!-- eye -->
-        <path d="M92 32 C108 13, 132 13, 148 32 C132 51, 108 51, 92 32 Z" fill="#fffdf7" stroke="#2b2018" stroke-width="3.2" stroke-linejoin="round"/>
-        <circle cx="120" cy="32" r="9.5" fill="#cf5230" stroke="#2b2018" stroke-width="2.6"/>
-        <circle cx="120" cy="32" r="3.2" fill="#2b2018"/>
-        <!-- book spine -->
-        <path d="M120 64 L120 150" stroke="#2b2018" stroke-width="3.2" stroke-linecap="round"/>
-        <!-- left page -->
-        <path d="M120 64 C95 51, 55 51, 30 61 L30 141 C55 131, 95 131, 120 143 Z" fill="#fffdf7" stroke="#2b2018" stroke-width="3.2" stroke-linejoin="round"/>
-        <!-- right page -->
-        <path d="M120 64 C145 51, 185 51, 210 61 L210 141 C185 131, 145 131, 120 143 Z" fill="#fffdf7" stroke="#2b2018" stroke-width="3.2" stroke-linejoin="round"/>
-        <!-- text lines -->
-        <g stroke="#d8c39d" stroke-width="3.4" stroke-linecap="round">
-          <line x1="45" y1="76" x2="105" y2="74"/>
-          <line x1="45" y1="88" x2="105" y2="86"/>
-          <line x1="45" y1="100" x2="93" y2="99"/>
-          <line x1="135" y1="74" x2="195" y2="76"/>
-          <line x1="135" y1="86" x2="195" y2="88"/>
-          <line x1="147" y1="99" x2="195" y2="100"/>
-        </g>
-      </svg>
-    </div>
-
-    <div class="hero-features">
-      <div class="feature">
-        <span class="feature-ic">👁️</span>
-        <b>ხელოვნური ინტელექტი</b>
-        <span>ფოკუსის ანალიზი</span>
+    <div style="display: flex; justify-content: center; gap: 25px; flex-wrap: wrap; margin: 40px 0;">
+      <div style="text-align: center; max-width: 180px;">
+        <div style="background: #e8f4fc; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; font-size: 28px;">👁️</div>
+        <p style="font-weight: 700; margin-bottom: 5px; color: #2c3e50;">ხელოვნური ინტელექტი</p>
+        <p style="color: #555; font-size: 15px;">ფოკუსის ანალიზი</p>
       </div>
-      <div class="feature">
-        <span class="feature-ic">🎮</span>
-        <b>სავარჯიშოები</b>
-        <span>მონიშნული შენთვის</span>
+      <div style="text-align: center; max-width: 180px;">
+        <div style="background: #e8f4fc; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; font-size: 28px;">🎮</div>
+        <p style="font-weight: 700; margin-bottom: 5px; color: #2c3e50;">სავარჯიშოები</p>
+        <p style="color: #555; font-size: 15px;">მონიშნული შენთვის</p>
       </div>
-      <div class="feature">
-        <span class="feature-ic">🔠</span>
-        <b>დისლექსიაზე მორგებული</b>
-        <span>შრიფტები და ფერები</span>
+      <div style="text-align: center; max-width: 180px;">
+        <div style="background: #e8f4fc; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; font-size: 28px;">🔠</div>
+        <p style="font-weight: 700; margin-bottom: 5px; color: #2c3e50;">დისლექსიაზე მორგებული</p>
+        <p style="color: #555; font-size: 15px;">შრიფტები და ფერები</p>
       </div>
     </div>
 
-    <div id="permission-notice" class="callout">
-      📹 ყურადღება: ეს საიტი საჭიროებს კამერის ნებართვას თვალის ტრეკინგისთვის.<br>
-      <small>როდესაც დააჭერთ ღილაკს, ბრაუზერი მოითხოვს ნებართვას — აუცილებლად დააჭირეთ "Allow/ნებართვა"</small>
-    </div>
+<div id="permission-notice" style="background: #fff3cd; border: 1px solid #ffeaa7; padding: 15px; border-radius: 5px; margin: 10px 0;">
+    📹 ყურადღება: ეს საიტი საჭიროებს კამერის ნებართვას თვალის ტრეკინგისთვის.<br>
+    <small>როდესაც დააჭერთ მწვანე ღილაკს, ბრაუზერი მოითხოვს ნებართვას - აუცილებლად დააჭირეთ "Allow/ნებართვა"</small>
+</div>
 
-    <p class="hero-cta-label">დაიწყე სწრაფად</p>
-    <div class="hero-cta">
-      <button id="startCalibrationBox" class="btn btn-primary">
+    <p style="font-size: 18px; color: #444; margin: 30px 0 15px;">დაიწყე სწრაფად:</p>
+    <div style="margin: 25px 0;">
+      <button id="startCalibrationBox" style="background: #28a745; color: white; border: none; padding: 14px 30px; font-size: 18px; border-radius: 8px; cursor: pointer; font-weight: 600; margin: 10px; box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3); transition: all 0.3s;" onmouseover="this.style.transform='translateY(-2px)';" onmouseout="this.style.transform='none';">
         👁️ დაიწყე თვალის მონიტორინგით
       </button>
-      <button id="skipCalibration" onclick="skipCalibration()" class="btn btn-ghost">
+      <button id="skipCalibration" onclick="skipCalibration()" style="background: white; color: #4a6fa5; border: 2px solid #4a6fa5; padding: 14px 30px; font-size: 18px; border-radius: 8px; cursor: pointer; font-weight: 600; margin: 10px; transition: all 0.3s;" onmouseover="this.style.background='#f0f7ff';" onmouseout="this.style.background='white';">
         🖱️ სცადე კამერის გარეშე
       </button>
     </div>
@@ -421,11 +250,10 @@
     </header>
     <style>
     #mainHeader {
-      background-color: #2b2018;
-      color: #f3ead9;
+      background-color: #2c3e50;
+      color: white;
       padding: 0 5%;
-      border-bottom: 2px solid #2b2018;
-      box-shadow: 0 3px 0 rgba(207,82,48,0.9);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
       position: sticky;
       top: 0;
       z-index: 1000;
@@ -453,12 +281,11 @@
     }
 
     #mainHeader .logo-icon {
-      background-color: #cf5230;
+      background-color: #4a6fa5;
       width: 40px;
       height: 40px;
       min-width: 40px;
-      border-radius: 10px;
-      border: 2px solid #f3ead9;
+      border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -506,8 +333,7 @@
     }
 
     #mainHeader nav a:hover {
-      background-color: #cf5230;
-      color: #fff;
+      background-color: #4a6fa5;
     }
 
     /* User Controls */
@@ -741,7 +567,7 @@ function toggleLetterSpacing() {
 .dyslexia-friendly-theme{background:#FFF;color:#222;font-family:OpenDyslexic,'Comic Sans',sans-serif;line-height:2;letter-spacing:0.05em}
 
 a,button {color:inherit; cursor:pointer; transition:color .3s;}
-a:hover {color:#cf5230;}
+a:hover,button:hover {color:#007BFF; text-decoration:underline;}
 body {line-height:1.6;}
 .container {padding:1rem 2rem;}
 
@@ -834,150 +660,230 @@ body {line-height:1.6;}
 </div>
 
 
-<div id="exercisesSection" class="ex-wrap">
+<div id="exercisesSection" style="max-width: 800px; margin: 0 auto; padding: 20px;">
 
-  <header class="sec-head">
-    <div class="sec-mark">📚</div>
-    <div>
-      <h2 class="sec-title">სავარჯიშოები</h2>
-      <p class="sec-lead">აირჩიე თამაში და ივარჯიშე შენი ტემპით</p>
-    </div>
-  </header>
-
-  <div class="ex-filters">
-    <button class="ex-filter is-active" data-filter="all" onclick="filterExercises('all')">ყველა</button>
-    <button class="ex-filter" data-filter="level1" onclick="filterExercises('level1')">მარტივი</button>
-    <button class="ex-filter" data-filter="level2" onclick="filterExercises('level2')">საშუალო</button>
-    <button class="ex-filter" data-filter="level3" onclick="filterExercises('level3')">რთული</button>
+  <!-- Header with Search -->
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; gap: 15px; flex-wrap: wrap;">
+    <h2 style="color: #2c3e50; margin: 0; font-size: 24px; font-weight: 600; display: flex; align-items: center; gap: 10px;">
+      <span style="background: #4a6fa5; width: 36px; height: 36px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; color: white;">📚</span>
+      სავარჯიშოები
+    </h2>
   </div>
 
-  <div id="exercisesContainer">
+  <!-- Exercise Categories (Tabs) -->
+  <div style="display: flex; gap: 10px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 5px; padding-top:5px; padding-left: 2px">
+    <button onclick="filterExercises('all')" style="background: #4a6fa5; color: white; border: none; padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 500; white-space: nowrap;">ყველა</button>
+    <button onclick="filterExercises('level1')" style="background: #e2e8f0; color: #2c3e50; border: none; padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 500; white-space: nowrap;">მარტივი</button>
+    <button onclick="filterExercises('level2')" style="background: #e2e8f0; color: #2c3e50; border: none; padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 500; white-space: nowrap;">საშუალო</button>
+    <button onclick="filterExercises('level3')" style="background: #e2e8f0; color: #2c3e50; border: none; padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 500; white-space: nowrap;">რთული</button>
+  </div>
 
-    <div class="exercise-card" data-level="level1" data-index="01" onclick="startExercise('letter-mastery')" id="letter-mastery">
-      <div class="ex-emoji">🔤</div>
-      <div class="ex-body">
-        <div class="ex-head">
-          <h3 class="ex-title">Letter Mastery</h3>
-          <span class="ex-badge easy">მარტივი</span>
-        </div>
-        <p class="ex-desc">გაავრჯიშე შენი ტვინი რთული ასოების, როგორიცაა შ/წ და მ/ნ, გარჩევისთვის.</p>
-        <div class="ex-tags">
-          <span class="ex-tag">ასოების ამოცნობა</span>
-          <span class="ex-tag">ფონეტიკა</span>
+  <!-- Exercise List -->
+  <div id="exercisesContainer"style="display: grid; gap: 16px;">
+
+    <!-- 1. Letter Mastery -->
+    <div class="exercise-card" data-level="level1"
+    onclick="startExercise('letter-mastery')" id="letter-mastery"
+         style="background: white; border-radius: 12px; padding: 0; cursor: pointer; 
+                box-shadow: 0 2px 6px rgba(0,0,0,0.05); transition: all 0.2s; border: 1px solid #f0f4f8;"
+         onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)'" 
+         onmouseout="this.style.transform='none'; this.style.boxShadow='0 2px 6px rgba(0,0,0,0.05)'">
+      <div style="background: linear-gradient(135deg, #6f42c1, #8e44ad); height: 6px; border-radius: 12px 12px 0 0;"></div>
+      <div style="padding: 16px; display: flex; gap: 16px;">
+        <div style="background: #f8f5ff; color: #6f42c1; width: 48px; height: 48px; border-radius: 10px; display: grid; place-items: center; font-size: 22px; flex-shrink: 0;">🔤</div>
+        <div style="flex: 1;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h3 style="margin: 0 0 6px 0; color: #2c3e50; font-size: 17px; font-weight: 600;">Letter Mastery</h3>
+            <span style="background: #f0fdf4; color: #166534; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 500;">მარტივი</span>
+          </div>
+          <p style="margin: 0; color: #666; font-size: 14px; line-height: 1.5;">გაავრჯიშე შენი ტვინი რთული ასოების, როგორიცაა შ/წ და მ/ნ, გარჩევისთვის.</p>
+          <div style="display: flex; gap: 8px; margin-top: 12px;">
+            <span style="background: #f3e8ff; color: #6f42c1; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 500;">ასოების ამოცნობა</span>
+            <span style="background: #e4d8fd; color: #685991; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 500;">ფონეტიკა</span>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="exercise-card" data-level="level3" data-index="02" onclick="startExercise('emoji-word-finder')" id="emoji-word-finder">
-      <div class="ex-emoji">🔠</div>
-      <div class="ex-body">
-        <div class="ex-head">
-          <h3 class="ex-title">Emoji word finder</h3>
-          <span class="ex-badge hard">რთული</span>
-        </div>
-        <p class="ex-desc">გაშიფრე ემოჯით მინიშებული სიტყვები, აარჩიე ისეთი ასოები რომლითაც მაგ სიტყვას ააწყობ.</p>
-        <div class="ex-tags">
-          <span class="ex-tag">სიტყვების ამოცნობა</span>
-          <span class="ex-tag">სიტყვების ორთოგრაფია</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="exercise-card" data-level="level2" data-index="03" onclick="startExercise('gaze-maze')" id="gaze-maze">
-      <div class="ex-emoji">👁️</div>
-      <div class="ex-body">
-        <div class="ex-head">
-          <h3 class="ex-title">Gaze Maze</h3>
-          <span class="ex-badge medium">საშუალო</span>
-        </div>
-        <p class="ex-desc">გააყოლე თვალი ბურთს, რაც გააუმჯობესებს კონტროლს და შეამცირებს არასტაბილურ კითხვის მოძრაობებს.</p>
-        <div class="ex-tags">
-          <span class="ex-tag">ADHD</span>
-          <span class="ex-tag">თვალის დატრეკვა</span>
+    <!-- 2. Emoji Word Finder -->
+    <div  class="exercise-card" data-level="level3"
+    onclick="startExercise('emoji-word-finder')" id="emoji-word-finder"
+         style="background: white; border-radius: 12px; padding: 0; cursor: pointer; 
+                box-shadow: 0 2px 6px rgba(0,0,0,0.05); transition: all 0.2s; border: 1px solid #f0f4f8;"
+         onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)'" 
+         onmouseout="this.style.transform='none'; this.style.boxShadow='0 2px 6px rgba(0,0,0,0.05)'">
+      <div style="background: linear-gradient(135deg, #28a745, #2ecc71); height: 6px; border-radius: 12px 12px 0 0;"></div>
+      <div style="padding: 16px; display: flex; gap: 16px;">
+        <div style="background: #f0fdf4; color: #28a745; width: 48px; height: 48px; border-radius: 10px; display: grid; place-items: center; font-size: 22px; flex-shrink: 0;">🔠</div>
+        <div style="flex: 1;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h3 style="margin: 0 0 6px 0; color: #2c3e50; font-size: 17px; font-weight: 600;">Emoji word finder</h3>
+            <span style="background: #fee1c7; color: #92400e; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 500;">რთული</span>
+          </div>
+          <p style="margin: 0; color: #666; font-size: 14px; line-height: 1.5;">გაშიფრე ემოჯით მინიშებული სიტყვები, აარჩიე ისეთი ასოები რომლითაც მაგ სიტყვას ააწყობ.</p>
+          <div style="display: flex; gap: 8px; margin-top: 12px;">
+            <span style="background: #f3e8ff; color: #6f42c1; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 500;">სიტყვების ამოცნობა</span>
+            <span style="background: #f3e8ff; color: #4271c1; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 500;">სიტყვების ორთოგრაფია</span>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="exercise-card" data-level="level1" data-index="04" onclick="startExercise('find-words')" id="find-words">
-      <div class="ex-emoji">🕵</div>
-      <div class="ex-body">
-        <div class="ex-head">
-          <h3 class="ex-title">Find words</h3>
-          <span class="ex-badge easy">მარტივი</span>
-        </div>
-        <p class="ex-desc">გაიუმჯობესე თვალები რათა არწივივით თვალები გქონდეს! მოძებნე დამალული სიტყვები ასოების ზღვაში - ჩქარი და სახალისო. მზად ხარ რომ ყველა სიტყვა იპოვო?</p>
-        <div class="ex-tags">
-          <span class="ex-tag">ვიზუალური სკანირება</span>
-          <span class="ex-tag">სიტყვების ორთოგრაფია</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="exercise-card" data-level="level1" data-index="05" onclick="startExercise('odd-one-out')" id="odd-one-out">
-      <div class="ex-emoji">🎯</div>
-      <div class="ex-body">
-        <div class="ex-head">
-          <h3 class="ex-title">Odd One Out</h3>
-          <span class="ex-badge easy">მარტივი</span>
-        </div>
-        <p class="ex-desc">იპოვე გამონაკლისი სურათების რიგში! გაართმევ თავს ამ გამოწვევას?</p>
-        <div class="ex-tags">
-          <span class="ex-tag">ობზერვაცია</span>
-          <span class="ex-tag">ლოგიკა</span>
-          <span class="ex-tag">ფიქრი</span>
+    <!-- 3. Gaze Maze -->
+    <div  class="exercise-card" data-level="level2"
+    onclick="startExercise('gaze-maze')" id="gaze-maze"
+         style="background: white; border-radius: 12px; padding: 0; cursor: pointer; 
+                box-shadow: 0 2px 6px rgba(0,0,0,0.05); transition: all 0.2s; border: 1px solid #f0f4f8;"
+         onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)'" 
+         onmouseout="this.style.transform='none'; this.style.boxShadow='0 2px 6px rgba(0,0,0,0.05)'">
+      <div style="background: linear-gradient(135deg, #3182ce, #4299e1); height: 6px; border-radius: 12px 12px 0 0;"></div>
+      <div style="padding: 16px; display: flex; gap: 16px;">
+        <div style="background: #eff6ff; color: #3182ce; width: 48px; height: 48px; border-radius: 10px; display: grid; place-items: center; font-size: 22px; flex-shrink: 0;">👁️</div>
+        <div style="flex: 1;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h3 style="margin: 0 0 6px 0; color: #2c3e50; font-size: 17px; font-weight: 600;">Gaze Maze</h3>
+            <span style="background: #fef3c7; color: #92400e; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 500;">საშუალო</span>
+          </div>
+          <p style="margin: 0; color: #666; font-size: 14px; line-height: 1.5;">გააყოლე თვალი ბურთს, რაც გააუმჯობესებს კონტროლს და შეამცირებს არასტაბილურ კითხვის მოძრაობებს.</p>
+          <div style="display: flex; gap: 8px; margin-top: 12px;">
+            <span style="background: #eff6ff; color: #1e40af; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 500;">ADHD</span>
+            <span style="background: #e9d8fd; color: #553c9a; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 500;">თვალის დატრეკვა</span>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="exercise-card" data-level="level3" data-index="06" onclick="startExercise('syllable-builder')" id="syllable-builder">
-      <div class="ex-emoji">🧩</div>
-      <div class="ex-body">
-        <div class="ex-head">
-          <h3 class="ex-title">Syllable Builder</h3>
-          <span class="ex-badge hard">რთული</span>
-        </div>
-        <p class="ex-desc">ააშენე ემოჯით მინიშებული სიტყვები, აირჩიე ისეთი მარცვალები რომლითაც მაგ სიტყვას ააწყობ.</p>
-        <div class="ex-tags">
-          <span class="ex-tag">სიტყვების ამოცნობა</span>
-          <span class="ex-tag">მარცვლები</span>
-          <span class="ex-tag">სიტყვების აწყობა</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="exercise-card" data-level="level2" data-index="07" onclick="startExercise('memory-match')" id="memory-match">
-      <div class="ex-emoji">🧠</div>
-      <div class="ex-body">
-        <div class="ex-head">
-          <h3 class="ex-title">Memory Match</h3>
-          <span class="ex-badge medium">საშუალო</span>
-        </div>
-        <p class="ex-desc">დააწყვილე სურათი მის სახელთან და გაავარჯიშე მეხსიერება და ყურადღება.</p>
-        <div class="ex-tags">
-          <span class="ex-tag">მეხსიერება</span>
-          <span class="ex-tag">ყურადღება</span>
-          <span class="ex-tag">სიტყვები</span>
+    <!-- 4. Find words 1 row -->
+    <div  class="exercise-card" data-level="level1"
+    onclick="startExercise('find-words')" id="find-words"
+         style="background: white; border-radius: 12px; padding: 0; cursor: pointer; 
+                box-shadow: 0 2px 6px rgba(0,0,0,0.05); transition: all 0.2s; border: 1px solid #f0f4f8;"
+         onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)'" 
+         onmouseout="this.style.transform='none'; this.style.boxShadow='0 2px 6px rgba(0,0,0,0.05)'">
+      <div style="background: linear-gradient(135deg, #d69e2e, #ed8936); height: 6px; border-radius: 12px 12px 0 0;"></div>
+      <div style="padding: 16px; display: flex; gap: 16px;">
+        <div style="background: #fef3c7; color: #d69e2e; width: 48px; height: 48px; border-radius: 10px; display: grid; place-items: center; font-size: 22px; flex-shrink: 0;">🕵</div>
+        <div style="flex: 1;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h3 style="margin: 0 0 6px 0; color: #2c3e50; font-size: 17px; font-weight: 600;">Find words</h3>
+            <span style="background: #f0fdf4; color: #166534; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 500;">Easy</span>
+          </div>
+          <p style="margin: 0; color: #666; font-size: 14px; line-height: 1.5;">გაიუმჯობესე თვალები რათა არწივივით თვალები გქონდეს! მოძებნე დამალული სიტყვები ასოების ზღვაში - ჩქარი და სახალისო. მზად ხარ რომ ყველა სიტყვა იპოვო?</p>
+          <div style="display: flex; gap: 8px; margin-top: 12px;">
+            <span style="background: #fef3c7; color: #92400e; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 500;">ვიზუალური სკანირება</span>
+            <span style="background: #f3e8ff; color: #4271c1; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 500;">სიტყვების ორთოგრაფია</span>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="exercise-card" data-level="level1" data-index="08" onclick="startExercise('letter-order')" id="letter-order">
-      <div class="ex-emoji">🔤</div>
-      <div class="ex-body">
-        <div class="ex-head">
-          <h3 class="ex-title">Letter Order</h3>
-          <span class="ex-badge easy">მარტივი</span>
-        </div>
-        <p class="ex-desc">აირჩიე ასოები სწორი თანმიმდევრობით, რათა შექმნა ნაჩვენები სიტყვა</p>
-        <div class="ex-tags">
-          <span class="ex-tag">ასოების დალაგება</span>
-          <span class="ex-tag">ფონეტიკა</span>
+    <!-- 5. odd one out -->
+    <div  class="exercise-card" data-level="level1"
+    onclick="startExercise('odd-one-out')" id="odd-one-out"
+         style="background: white; border-radius: 12px; padding: 0; cursor: pointer; 
+                box-shadow: 0 2px 6px rgba(0,0,0,0.05); transition: all 0.2s; border: 1px solid #f0f4f8;"
+         onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)'" 
+         onmouseout="this.style.transform='none'; this.style.boxShadow='0 2px 6px rgba(0,0,0,0.05)'">
+      <div style="background: linear-gradient(135deg, #e53e3e, #f56565); height: 6px; border-radius: 12px 12px 0 0;"></div>
+      <div style="padding: 16px; display: flex; gap: 16px;">
+        <div style="background: #fee2e2; color: #e53e3e; width: 48px; height: 48px; border-radius: 10px; display: grid; place-items: center; font-size: 22px; flex-shrink: 0;">🎯</div>
+        <div style="flex: 1;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h3 style="margin: 0 0 6px 0; color: #2c3e50; font-size: 17px; font-weight: 600;">Odd One Out</h3>
+            <span style="background: #f0fdf4; color: #166534; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 500;">Easy</span>
+          </div>
+          <p style="margin: 0; color: #666; font-size: 14px; line-height: 1.5;">იპოვე გამონაკლისი სურათების რიგში! გაართმევ თავს ამ გამოწვევას?</p>
+          <div style="display: flex; gap: 8px; margin-top: 12px;">
+            <span style="background: #fee2e2; color: #991b1b; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 500;">ობზერვაცია</span>
+            <span style="background: #eff6ff; color: #1e40af; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 500;">ლოგიკა</span>
+           <span style="background: #fff7ed; color: #9c4221; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 500;">ფიქრი</span>
+          </div>
         </div>
       </div>
     </div>
+    <!-- 6. Syllable Builder -->
+    <div  class="exercise-card" data-level="level3"
+    onclick="startExercise('syllable-builder')" id="syllable-builder"
+         style="background: white; border-radius: 12px; padding: 0; cursor: pointer; 
+                box-shadow: 0 2px 6px rgba(0,0,0,0.05); transition: all 0.2s; border: 1px solid #f0f4f8;"
+         onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)'" 
+         onmouseout="this.style.transform='none'; this.style.boxShadow='0 2px 6px rgba(0,0,0,0.05)'">
+      <div style="background: linear-gradient(135deg, #85a728, #2ecc71); height: 6px; border-radius: 12px 12px 0 0;"></div>
+      <div style="padding: 16px; display: flex; gap: 16px;">
+        <div style="background: #f0fdf4; color: #90a728; width: 48px; height: 48px; border-radius: 10px; display: grid; place-items: center; font-size: 22px; flex-shrink: 0;">🧩</div>
+        <div style="flex: 1;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h3 style="margin: 0 0 6px 0; color: #2c3e50; font-size: 17px; font-weight: 600;">Syllable Builder</h3>
+            <span style="background: #fee1c7; color: #92400e; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 500;">რთული</span>
+          </div>
+          <p style="margin: 0; color: #666; font-size: 14px; line-height: 1.5;">ააშენე ემოჯით მინიშებული სიტყვები, აირჩიე ისეთი მარცვალები რომლითაც მაგ სიტყვას ააწყობ.</p>
+          <div style="display: flex; gap: 8px; margin-top: 12px;">
+            <span style="background: #f3e8ff; color: #6f42c1; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 500;">სიტყვების ამოცნობა</span>
+            <span style="background: #f3e8ff; color: #6f42c1; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 500;">მარცვლები</span>
+            <span style="background: #f3e8ff; color: #4271c1; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 500;">სიტყვების აწყობა</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 8. Memory Match -->
+    <div class="exercise-card" data-level="level2"
+    onclick="startExercise('memory-match')" id="memory-match"
+         style="background: white; border-radius: 12px; padding: 0; cursor: pointer;
+                box-shadow: 0 2px 6px rgba(0,0,0,0.05); transition: all 0.2s; border: 1px solid #f0f4f8;"
+         onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)'"
+         onmouseout="this.style.transform='none'; this.style.boxShadow='0 2px 6px rgba(0,0,0,0.05)'">
+      <div style="background: linear-gradient(135deg, #6366f1, #818cf8); height: 6px; border-radius: 12px 12px 0 0;"></div>
+      <div style="padding: 16px; display: flex; gap: 16px;">
+        <div style="background: #eef2ff; color: #6366f1; width: 48px; height: 48px; border-radius: 10px; display: grid; place-items: center; font-size: 22px; flex-shrink: 0;">🧠</div>
+        <div style="flex: 1;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h3 style="margin: 0 0 6px 0; color: #2c3e50; font-size: 17px; font-weight: 600;">Memory Match</h3>
+            <span style="background: #fef3c7; color: #92400e; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 500;">საშუალო</span>
+          </div>
+          <p style="margin: 0; color: #666; font-size: 14px; line-height: 1.5;">დააწყვილე სურათი მის სახელთან და გაავარჯიშე მეხსიერება და ყურადღება.</p>
+          <div style="display: flex; gap: 8px; margin-top: 12px;">
+            <span style="background: #eef2ff; color: #4338ca; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 500;">მეხსიერება</span>
+            <span style="background: #eff6ff; color: #1e40af; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 500;">ყურადღება</span>
+            <span style="background: #f3e8ff; color: #6f42c1; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 500;">სიტყვები</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. Letter Order -->
+    <div class="exercise-card" data-level="level1"
+     onclick="startExercise('letter-order')" id="letter-order"
+     style="background: white; border-radius: 12px; padding: 0; cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05); transition: all 0.2s; border: 1px solid #f0f4f8;"
+     onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)'" 
+     onmouseout="this.style.transform='none'; this.style.boxShadow='0 2px 6px rgba(0,0,0,0.05)'">
+  
+  <div style="background: linear-gradient(135deg, #059669, #10b981); height: 6px; border-radius: 12px 12px 0 0;"></div>
+  
+  <div style="padding: 16px; display: flex; gap: 16px;">
+    <div style="background: #ecfdf5; color: #059669; width: 48px; height: 48px; border-radius: 10px; display: grid; place-items: center; font-size: 22px; flex-shrink: 0;">🔤</div>
+    
+    <div style="flex: 1;">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="margin: 0 0 6px 0; color: #2c3e50; font-size: 17px; font-weight: 600;">Letter Order</h3>
+        <span style="background: #ecfdf5; color: #059669; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 500;">მარტივი</span>
+      </div>
+      
+      <p style="margin: 0; color: #666; font-size: 14px; line-height: 1.5;">
+        აირჩიე ასოები სწორი თანმიმდევრობით, რათა შექმნა ნაჩვენები სიტყვა
+      </p>
+      
+      <div style="display: flex; gap: 8px; margin-top: 12px;">
+        <span style="background: #d1fae5; color: #065f46; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 500;">ასოების დალაგება</span>
+        <span style="background: #f0fdf4; color: #166534; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 500;">ფონეტიკა</span>
+      </div>
+    </div>
+  </div>
+</div>
 
   </div>
 </div>
+
 
 <div id="letter-mastery-game" style="display: none; position: relative; width: 100%; height: 92vh;  overflow: hidden;">
 
