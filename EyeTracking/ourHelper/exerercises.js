@@ -2,22 +2,26 @@ const eyeTrackingExercises = [
 'gaze-maze'
 ];
 
+// Shared global state. Declared here (exerercises.js loads first) so these
+// always exist before any click handler runs, even if calibration.js/main.js
+// only assign to them later.
+var eyeTrackingActive = false;
+var currentGameName = null;
 let currentExerciseType = null;
 
 function startExercise(type) {
-  exClick=true;
-  let gameName=type+'-game';
+  exClick = true;
+  const gameName = type + '-game';
+  currentGameName = gameName;
   console.log("Starting exercise:", type);
   document.getElementById('exercisesSection').style.display = 'none';
   currentExerciseType = type;
 
-  if (eyeTrackingExercises.includes(type) & eyeTrackingActive==false) {
+  if (eyeTrackingExercises.includes(type) && eyeTrackingActive === false) {
     document.getElementById('eyeTrackingPrompt').style.display = 'block';
-  } else{
-      document.getElementById(gameName).style.display='block'
-  };
-  
-
+  } else {
+    document.getElementById(gameName).style.display = 'block';
+  }
 }
 
 function startCalibrationExercise(){
@@ -81,8 +85,8 @@ function proceedToTracking() {
   // Start tracking phase after 5s
   setTimeout(() => {
     document.getElementById('main').style.display = 'block';
-    if (exClick){
-      document.getElementById(gameName).style.display='block'
+    if (exClick && currentGameName) {
+      document.getElementById(currentGameName).style.display = 'block';
     }
     console.log(eyeTrackingActive)
   }, 1000);

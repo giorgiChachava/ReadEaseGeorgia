@@ -94,46 +94,42 @@ const ExerciseGames = [
 'gaze-maze-game',
 'find-words-game',
 'odd-one-out-game',
-'focus-timer-game',
-'rapid-word-attack-game',
 'syllable-builder-game',
 'letter-order-game',
+'memory-match-game',
 ];
 
 function showSection(sectionId) {
   const sections = ['toolsSection', 'exercisesSection',  'aboutSection'];
   sections.forEach(id => {
-    document.getElementById(id).style.display = (id === sectionId) ? 'block' : 'none';
+    const el = document.getElementById(id);
+    if (el) el.style.display = (id === sectionId) ? 'block' : 'none';
   });
 }
 
 function hideExercises(){
   ExerciseGames.forEach(id => {
-    document.getElementById(id).style.display='none';
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'none';
   });
 }
   function filterExercises(level) {
-    // Update button styles
+    // Highlight the active category button. The buttons are labelled in
+    // Georgian, so map the level id to its label instead of matching English.
+    const levelToLabel = {
+      all: 'ყველა',
+      level1: 'მარტივი',
+      level2: 'საშუალო',
+      level3: 'რთული'
+    };
+    const activeLabel = levelToLabel[level];
     const buttons = document.querySelectorAll('#exercisesSection button');
     buttons.forEach(button => {
-      if (button.textContent.toLowerCase().includes(level)) {
-        button.style.background = '#4a6fa5';
-        button.style.color = 'white';
-      } else if (button.textContent.toLowerCase() !== 'all') {
-        button.style.background = '#e2e8f0';
-        button.style.color = '#2c3e50';
-      }
+      const isActive = button.textContent.trim() === activeLabel;
+      button.style.background = isActive ? '#4a6fa5' : '#e2e8f0';
+      button.style.color = isActive ? 'white' : '#2c3e50';
     });
-    
-    // Special case for "All" button
-    if (level === 'all') {
-      document.querySelector('#exercisesSection button:first-child').style.background = '#4a6fa5';
-      document.querySelector('#exercisesSection button:first-child').style.color = 'white';
-    } else {
-      document.querySelector('#exercisesSection button:first-child').style.background = '#e2e8f0';
-      document.querySelector('#exercisesSection button:first-child').style.color = '#2c3e50';
-    }
-    
+
     // Filter exercises
     const exercises = document.querySelectorAll('.exercise-card');
     exercises.forEach(exercise => {
